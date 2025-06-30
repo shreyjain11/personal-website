@@ -18,6 +18,12 @@ const projects = [
     description:
       "VerbaAI is an AI voice-to-email assistant for composing professional emails.",
   },
+  {
+    name: "Project Physica",
+    logo: "/MindMeshLogo.png", // TODO: Replace with actual logo if available
+    url: "https://projectphysica.org/",
+    description: "A tool for people of all ages to learn high-level physics simply.",
+  },
 ];
 
 export default function Projects() {
