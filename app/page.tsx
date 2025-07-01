@@ -16,6 +16,7 @@ const TITLES = [
   "Tech Enthusiast",
   "ML Researcher",
   "Creator",
+  "Designer",
 ];
 
 function useTypewriter(words: string[], speed = 80, pause = 1200) {
