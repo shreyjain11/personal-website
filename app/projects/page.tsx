@@ -24,6 +24,12 @@ const projects = [
     url: "https://projectphysica.org/",
     description: "A tool for people of all ages to learn high-level physics simply.",
   },
+  {
+    name: "MoodMirror",
+    logo: "/MoodMirrorLogo.png",
+    url: "https://mood-mirror-fawn.vercel.app/",
+    description: "A mood tracking app that helps you understand your emotions and improve your mental health.",
+  }
 ];
 
 export default function Projects() {
