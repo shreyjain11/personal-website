@@ -20,7 +20,7 @@ const projects = [
   },
   {
     name: "Project Physica",
-    logo: "/ProjectPhysicaLogo.png", // TODO: Replace with actual logo if available
+    logo: "/ProjectPhysicaLogo.png",
     url: "https://projectphysica.org/",
     description: "A tool for people of all ages to learn high-level physics simply.",
   },
