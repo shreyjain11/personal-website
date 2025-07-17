@@ -5,20 +5,6 @@ import Link from "next/link";
 
 const projects = [
   {
-    name: "MindMesh",
-    logo: "/MindMeshLogo.png",
-    url: "https://aimindmesh.netlify.app/",
-    description:
-      "AI-powered mind mapping platform transforms ideas into visual maps collaboratively.",
-  },
-  {
-    name: "VerbaAI",
-    logo: "/verbaAI logo.png",
-    url: "https://verbaai.netlify.app/",
-    description:
-      "VerbaAI is an AI voice-to-email assistant for composing professional emails.",
-  },
-  {
     name: "Project Physica",
     logo: "/ProjectPhysicaLogo.png",
     url: "https://projectphysica.org/",
