@@ -15,7 +15,7 @@ The website is designed to:
 
 ## 📬 Connect
 You can find me here:
-- [Email](mailshreyjain[at]gmail.com)  
+- mailshreyjain[at]gmail.com  
 - [Twitter](https://twitter.com/jain11shrey)  
 
 ---
