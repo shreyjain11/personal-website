@@ -5,16 +5,10 @@ import Link from "next/link";
 
 const projects = [
   {
-    name: "Project Physica",
-    logo: "/ProjectPhysicaLogo.png",
-    url: "https://projectphysica.org/",
-    description: "A tool for people of all ages to learn high-level physics simply.",
-  },
-  {
-    name: "MoodMirror",
-    logo: "/MoodMirrorLogo.png",
-    url: "https://mood-mirror-fawn.vercel.app/",
-    description: "A mood tracking app that helps you understand your emotions and improve your mental health.",
+    name: "PromptScan",
+    logo: "/globe.svg",
+    url: "https://prompt-injection-scanner.vercel.app",
+    description: "Security tool that analyzes GitHub repositories for prompt injection attack potential and hotspots.",
   }
 ];
 

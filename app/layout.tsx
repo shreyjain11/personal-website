@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Boxes } from "./components/ui/background-boxes";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,10 +23,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased relative`}> 
         <SpeedInsights />
         <ThemeProvider>
-          {children}
+          <div className="absolute inset-0 overflow-hidden z-0">
+            <Boxes />
+          </div>
+          <div className="relative z-10">
+            {children}
+          </div>
         </ThemeProvider> 
       </body>
     </html>
