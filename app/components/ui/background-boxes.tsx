@@ -9,7 +9,7 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
   const cols = useMemo(() => new Array(60).fill(1), []);
   const containerRef = useRef<HTMLDivElement>(null);
   const [mouse, setMouse] = useState<{ x: number; y: number }>({ x: -9999, y: -9999 });
-  let colors = [
+  const colors = [
     "#93c5fd",
     "#f9a8d4",
     "#86efac",

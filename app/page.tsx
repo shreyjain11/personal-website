@@ -55,7 +55,6 @@ function useTypewriter(words: string[], speed = 80, pause = 1200) {
 
 export default function Home() {
   const typewriter = useTypewriter(TITLES);
-  const [imgHover, setImgHover] = useState(false);
 
   // Bio fade/cycle effect
   const bioSentences = [
