@@ -74,9 +74,6 @@ export function AppBreadcrumb() {
                   <DropdownMenuItem>
                     <Link href="/photography">photography</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <a href="/Shrey Jain Résumé (2).pdf" target="_blank" rel="noopener noreferrer">resume</a>
-                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </BreadcrumbItem>

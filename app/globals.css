@@ -13,22 +13,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@keyframes cell-ripple {
-  0% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 0.4;
-  }
-}
-
-.animate-cell-ripple {
-  animation: cell-ripple var(--duration, 200ms) ease-out var(--delay, 0ms);
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

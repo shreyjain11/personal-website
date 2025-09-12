@@ -129,7 +129,6 @@ export default function Home() {
             <Link href="/work" className="transition-all duration-300 hover:scale-105 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 text-lg font-medium text-gray-800 dark:text-gray-200">work</Link>
             <Link href="/projects" className="transition-all duration-300 hover:scale-105 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 text-lg font-medium text-gray-800 dark:text-gray-200">projects</Link>
             <Link href="/photography" className="transition-all duration-300 hover:scale-105 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 text-lg font-medium text-gray-800 dark:text-gray-200">photography</Link>
-            <a href="/Shrey Jain Résumé (2).pdf" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-105 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 text-lg font-medium text-gray-800 dark:text-gray-200">resume</a>
           </div>
         </div>
       </main>

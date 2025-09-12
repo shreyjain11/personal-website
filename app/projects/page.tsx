@@ -1,9 +1,6 @@
 "use client";
 import Image from "next/image";
 
-
-// Breadcrumb is rendered globally in layout now
-
 interface Project {
   name: string;
   logo?: string;
@@ -21,11 +18,9 @@ const projects: Project[] = [
 
 export default function Projects() {
 
-
   return (
     <div className="min-h-screen text-gray-900 dark:text-gray-100 font-inter transition-colors duration-300 px-4 py-12">
       <div className="max-w-2xl mx-auto">
-
         <h1 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white tracking-tight">projects</h1>
         <div className="flex flex-col gap-6">
           {projects.map((project, idx) => (
@@ -35,7 +30,7 @@ export default function Projects() {
               target="_blank"
               rel="noopener noreferrer"
               className={
-                `flex items-center gap-4 px-5 py-4 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 transition-all duration-200 group` +
+                `flex items-center gap-4 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-900 transition-all duration-200 group` +
                 (idx === 0 ? " mt-2" : "")
               }
               style={{ minHeight: 64 }}
