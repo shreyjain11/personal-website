@@ -1,19 +1,25 @@
 import { NextResponse } from 'next/server';
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+// Initialize Redis client - Vercel will auto-inject these env vars
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
 
 export async function GET() {
   try {
-    // Increment the counter in Vercel KV
+    // Increment the counter in Upstash Redis
     // The incr command atomically increments and returns the new value
-    const count = await kv.incr('shrey-portfolio-visits');
+    const count = await redis.incr('shrey-portfolio-visits');
     
     // Add 100 to start from 100 instead of 0
-    const totalVisits = count + 100;
+    const totalVisits = Number(count) + 100;
     
     return NextResponse.json({ count: totalVisits });
   } catch (error) {
     console.error('Failed to increment counter:', error);
-    // Return a fallback value if KV is not set up yet
+    // Return a fallback value if Redis is not set up yet
     return NextResponse.json({ count: 100 });
   }
 }
