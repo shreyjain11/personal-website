@@ -8,38 +8,60 @@ export function VisitCounter() {
   const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {
+    // Set initial message index immediately
+    const storedIndex = localStorage.getItem("shreyJainMessageIndex");
+    const currentIndex = storedIndex ? parseInt(storedIndex, 10) : 0;
+    setMessageIndex(currentIndex);
+
     const fetchVisitCount = async () => {
       try {
-        // Fetch from the API endpoint
-        const response = await fetch('/api/counter');
-        const data = await response.json();
-        setVisits(data.count);
+        // Fetch from the API endpoint with cache busting
+        const response = await fetch('/api/counter', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         
-        // Get or set message index (still use localStorage for message rotation per user)
-        const storedIndex = localStorage.getItem("shreyJainMessageIndex");
-        const currentIndex = storedIndex ? parseInt(storedIndex, 10) : 0;
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('API Response:', data);
+        
+        if (data.error) {
+          console.error('API Error:', data.error);
+        }
+        
+        setVisits(data.count || 100);
+        
+        // Update message index
         const nextIndex = (currentIndex + 1) % 20;
         localStorage.setItem("shreyJainMessageIndex", nextIndex.toString());
-        
         setMessageIndex(nextIndex);
         setIsLoaded(true);
       } catch (error) {
         console.error('Failed to fetch visit count:', error);
-        // Fallback to localStorage if API fails
-        const currentVisits = localStorage.getItem("shreyJainVisits");
-        let visitCount = currentVisits ? parseInt(currentVisits, 10) : 100;
-        visitCount += 1;
-        localStorage.setItem("shreyJainVisits", visitCount.toString());
-        setVisits(visitCount);
+        // Still show the counter with fallback
         setIsLoaded(true);
       }
     };
 
+    // Show counter immediately with default value, then update
+    setIsLoaded(true);
     fetchVisitCount();
   }, []);
 
+  // Always show the counter, don't wait for loading
   if (!isLoaded) {
-    return null;
+    return (
+      <div className="fixed bottom-8 right-8 z-50">
+        <div className="text-xs font-mono text-black dark:text-black opacity-60">
+          loading...
+        </div>
+      </div>
+    );
   }
 
   const messages = [
