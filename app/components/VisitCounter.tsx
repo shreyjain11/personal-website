@@ -8,27 +8,34 @@ export function VisitCounter() {
   const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {
-    // Get current visit count from localStorage
-    const currentVisits = localStorage.getItem("shreyJainVisits");
-    let visitCount = currentVisits ? parseInt(currentVisits, 10) : 100;
-    
-    // Only increment if this is a returning visitor
-    if (currentVisits) {
-      visitCount += 1;
-    }
-    
-    // Save back to localStorage
-    localStorage.setItem("shreyJainVisits", visitCount.toString());
-    
-    // Get or set message index
-    const storedIndex = localStorage.getItem("shreyJainMessageIndex");
-    const currentIndex = storedIndex ? parseInt(storedIndex, 10) : 0;
-    const nextIndex = (currentIndex + 1) % 20;
-    localStorage.setItem("shreyJainMessageIndex", nextIndex.toString());
-    
-    setVisits(visitCount);
-    setMessageIndex(nextIndex);
-    setIsLoaded(true);
+    const fetchVisitCount = async () => {
+      try {
+        // Fetch from the API endpoint
+        const response = await fetch('/api/counter');
+        const data = await response.json();
+        setVisits(data.count);
+        
+        // Get or set message index (still use localStorage for message rotation per user)
+        const storedIndex = localStorage.getItem("shreyJainMessageIndex");
+        const currentIndex = storedIndex ? parseInt(storedIndex, 10) : 0;
+        const nextIndex = (currentIndex + 1) % 20;
+        localStorage.setItem("shreyJainMessageIndex", nextIndex.toString());
+        
+        setMessageIndex(nextIndex);
+        setIsLoaded(true);
+      } catch (error) {
+        console.error('Failed to fetch visit count:', error);
+        // Fallback to localStorage if API fails
+        const currentVisits = localStorage.getItem("shreyJainVisits");
+        let visitCount = currentVisits ? parseInt(currentVisits, 10) : 100;
+        visitCount += 1;
+        localStorage.setItem("shreyJainVisits", visitCount.toString());
+        setVisits(visitCount);
+        setIsLoaded(true);
+      }
+    };
+
+    fetchVisitCount();
   }, []);
 
   if (!isLoaded) {
