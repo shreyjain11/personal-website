@@ -5,6 +5,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
+import { VisitCounter } from "./components/VisitCounter";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,13 +28,13 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased relative`}> 
         <SpeedInsights />
         <ThemeProvider>
-
           <div className="relative z-10">
             <div className="max-w-5xl mx-auto px-4 pt-6">
               <AppBreadcrumb />
             </div>
             {children}
           </div>
+          <VisitCounter />
         </ThemeProvider> 
       </body>
     </html>
