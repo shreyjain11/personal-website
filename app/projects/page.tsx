@@ -13,6 +13,11 @@ const projects: Project[] = [
     name: "PromptScan",
     url: "https://prompt-injection-scanner.vercel.app",
     description: "Security tool that analyzes GitHub repositories for prompt injection attack potential and hotspots.",
+  },
+  {
+    name: "Galaxy Viewer",
+    url: "https://galaxy-viewer.vercel.app/",
+    description: "A fun interactive 3D Milky Way galaxy viewer that lets you explore our galaxy in space with realistic spiral structure and star distribution.",
   }
 ];
 
