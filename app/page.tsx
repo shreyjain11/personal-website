@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Dock, DockIcon } from "./components/Dock";
 import { CardContainer, CardBody, CardItem } from "./components/ui/3d-card";
+import { EncryptedText } from "./components/ui/encrypted-text";
 import { useEffect, useRef, useState } from "react";
 
 const TITLES = [
@@ -93,7 +94,13 @@ export default function Home() {
         </CardContainer>
         {/* Bio and Socials */}
         <div className="flex flex-col items-start justify-center w-full max-w-xl">
-          <h1 className="text-6xl font-extrabold mb-2 text-gray-900 dark:text-white">Shrey Jain</h1>
+          <h1 className="text-6xl font-extrabold mb-2 text-gray-900 dark:text-white">
+            <EncryptedText 
+              text="Shrey Jain"
+              revealDelayMs={150}
+              flipDelayMs={100}
+            />
+          </h1>
           <h2 className="text-3xl font-semibold text-gray-600 dark:text-gray-300 mb-4 h-10" style={{ minHeight: 40 }}>{typewriter}</h2>
           <div
             className={`text-xl mb-2 text-gray-800 dark:text-gray-200 transition-opacity duration-200 ${bioFade ? "opacity-100" : "opacity-0"}`}

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { NumberTicker } from "@/components/magicui/number-ticker";
+import { EncryptedText } from "./ui/encrypted-text";
 
 export function VisitCounter() {
   const [visits, setVisits] = useState<number>(100);
@@ -92,13 +93,33 @@ export function VisitCounter() {
   return (
     <div className="fixed bottom-8 right-8 z-50">
       <div className="text-xs font-mono text-black dark:text-black opacity-60 hover:opacity-100 transition-all duration-300 cursor-default">
-        {currentMessage.before && <span>{currentMessage.before} </span>}
+        {currentMessage.before && (
+          <>
+            <EncryptedText 
+              text={currentMessage.before}
+              className="inline-block"
+              revealDelayMs={120}
+              flipDelayMs={80}
+            />
+            <span> </span>
+          </>
+        )}
         <NumberTicker 
           value={visits} 
           className="inline-block text-xs font-mono text-black dark:text-black"
           delay={0.5}
         />
-        {currentMessage.after && <span> {currentMessage.after}</span>}
+        {currentMessage.after && (
+          <>
+            <span> </span>
+            <EncryptedText 
+              text={currentMessage.after}
+              className="inline-block"
+              revealDelayMs={120}
+              flipDelayMs={80}
+            />
+          </>
+        )}
       </div>
     </div>
   );
