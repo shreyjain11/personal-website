@@ -2,12 +2,37 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ComponentType } from "react";
 
-const GitHubCalendar = dynamic(
-  () => import("react-github-calendar").then((mod) => {
-    const Component = mod.default || mod.GitHubCalendar || mod;
-    return { default: Component };
-  }),
+interface ContributionDay {
+  date: string;
+  count: number;
+  level: number;
+}
+
+interface GitHubCalendarProps {
+  username: string;
+  year: number;
+  colorScheme?: string;
+  blockSize?: number;
+  blockMargin?: number;
+  fontSize?: number;
+  showWeekdayLabels?: boolean;
+  hideColorLegend?: boolean;
+  hideTotalCount?: boolean;
+  theme?: { dark: string[] };
+  transformData?: (data: ContributionDay[]) => ContributionDay[];
+}
+
+const GitHubCalendar = dynamic<GitHubCalendarProps>(
+  async () => {
+    const mod = await import("react-github-calendar");
+    // Handle both default and named exports
+    if ("default" in mod && mod.default) {
+      return mod.default;
+    }
+    return mod as ComponentType<GitHubCalendarProps>;
+  },
   {
     ssr: false,
     loading: () => (
@@ -20,12 +45,6 @@ const GitHubCalendar = dynamic(
 
 const currentYear = new Date().getFullYear();
 const years = [currentYear, currentYear - 1, currentYear - 2, currentYear - 3];
-
-interface ContributionDay {
-  date: string;
-  count: number;
-  level: number;
-}
 
 export function GitHubContributions({ username }: { username: string }) {
   const [mounted, setMounted] = useState(false);
