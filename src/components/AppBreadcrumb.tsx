@@ -71,9 +71,6 @@ export function AppBreadcrumb() {
                   <DropdownMenuItem>
                     <Link href="/projects">projects</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href="/photography">photography</Link>
-                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </BreadcrumbItem>

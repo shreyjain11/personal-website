@@ -14,7 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Shrey Jain | Personal Website",
+  title: "Shrey Jain",
   description: "Full-stack engineer & founder. Building AI products to create meaningful impact.",
 };
 
