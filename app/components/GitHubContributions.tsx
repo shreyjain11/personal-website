@@ -2,37 +2,16 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ComponentType } from "react";
 
 interface ContributionDay {
   date: string;
   count: number;
-  level: number;
+  level: 0 | 1 | 2 | 3 | 4;
 }
 
-interface GitHubCalendarProps {
-  username: string;
-  year: number;
-  colorScheme?: string;
-  blockSize?: number;
-  blockMargin?: number;
-  fontSize?: number;
-  showWeekdayLabels?: boolean;
-  hideColorLegend?: boolean;
-  hideTotalCount?: boolean;
-  theme?: { dark: string[] };
-  transformData?: (data: ContributionDay[]) => ContributionDay[];
-}
-
-const GitHubCalendar = dynamic<GitHubCalendarProps>(
-  async () => {
-    const mod = await import("react-github-calendar");
-    // Handle both default and named exports
-    if ("default" in mod && mod.default) {
-      return mod.default;
-    }
-    return mod as ComponentType<GitHubCalendarProps>;
-  },
+// Dynamic import with named export
+const GitHubCalendar = dynamic(
+  () => import("react-github-calendar").then((mod) => mod.GitHubCalendar),
   {
     ssr: false,
     loading: () => (
@@ -213,12 +192,12 @@ export function GitHubContributions({ username }: { username: string }) {
           blockMargin={3}
           fontSize={11}
           showWeekdayLabels
-          hideColorLegend
-          hideTotalCount
+          showColorLegend={false}
+          showTotalCount={false}
           theme={{
             dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
           }}
-          transformData={(data) => {
+          transformData={(data: ContributionDay[]) => {
             latestDataRef.current = data;
             if (rafRef.current === null) {
               rafRef.current = requestAnimationFrame(() => {
