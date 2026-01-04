@@ -139,7 +139,7 @@ export default function Home() {
       </main>
       
       {/* GitHub Contributions Section - Full Width */}
-      <section className="w-full max-w-4xl mx-auto px-8 mt-8 pb-20 overflow-hidden">
+      <section className="w-full max-w-4xl mx-auto px-8 -mt-4 pb-20 overflow-hidden">
         <GitHubContributions username="shreyjain11" />
       </section>
     </div>
