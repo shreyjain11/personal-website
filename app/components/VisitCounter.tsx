@@ -29,12 +29,8 @@ export function VisitCounter() {
         }
         
         const data = await response.json();
-        console.log('API Response:', data);
         
-        if (data.error) {
-          console.error('API Error:', data.error);
-        }
-        
+        // Silently use fallback if Redis not configured
         setVisits(data.count || 100);
         
         // Update message index
@@ -42,9 +38,8 @@ export function VisitCounter() {
         localStorage.setItem("shreyJainMessageIndex", nextIndex.toString());
         setMessageIndex(nextIndex);
         setIsLoaded(true);
-      } catch (error) {
-        console.error('Failed to fetch visit count:', error);
-        // Still show the counter with fallback
+      } catch {
+        // Silently use fallback value
         setIsLoaded(true);
       }
     };
@@ -92,7 +87,7 @@ export function VisitCounter() {
 
   return (
     <div className="fixed bottom-8 right-8 z-50">
-      <div className="text-xs font-mono text-black dark:text-black opacity-60 hover:opacity-100 transition-all duration-300 cursor-default">
+      <div className="text-xs font-mono text-white opacity-60 hover:opacity-100 transition-all duration-300 cursor-default">
         {currentMessage.before && (
           <>
             <EncryptedText 
@@ -106,7 +101,7 @@ export function VisitCounter() {
         )}
         <NumberTicker 
           value={visits} 
-          className="inline-block text-xs font-mono text-black dark:text-black"
+          className="inline-block text-xs font-mono text-white"
           delay={0.5}
         />
         {currentMessage.after && (

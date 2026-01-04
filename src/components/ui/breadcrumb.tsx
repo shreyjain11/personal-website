@@ -25,7 +25,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
     <ol
       data-slot="breadcrumb-list"
       className={cn(
-        "flex flex-wrap items-center gap-1.5 sm:gap-2.5 text-sm break-words text-gray-500 dark:text-gray-400",
+        "flex flex-wrap items-center gap-1.5 sm:gap-2.5 text-sm break-words text-white/70",
         className,
       )}
       {...props}
@@ -51,7 +51,7 @@ function BreadcrumbLink({ asChild, className, children, ...props }: BreadcrumbLi
     return React.cloneElement(child, {
       ...props,
       className: cn(
-        "transition-colors hover:text-gray-900 dark:hover:text-white",
+        "transition-colors hover:text-white",
         child.props?.className,
         className,
       ),
@@ -60,7 +60,7 @@ function BreadcrumbLink({ asChild, className, children, ...props }: BreadcrumbLi
   return (
     <a
       data-slot="breadcrumb-link"
-      className={cn("transition-colors hover:text-gray-900 dark:hover:text-white", className)}
+      className={cn("transition-colors hover:text-white", className)}
       {...props}
     >
       {children}
@@ -75,7 +75,7 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn("font-normal text-gray-900 dark:text-white", className)}
+      className={cn("font-normal text-white", className)}
       {...props}
     />
   );
@@ -87,7 +87,7 @@ function BreadcrumbSeparator({ children, className, ...props }: React.ComponentP
       data-slot="breadcrumb-separator"
       role="presentation"
       aria-hidden="true"
-      className={cn("[&>svg]:h-3.5 [&>svg]:w-3.5", className)}
+      className={cn("[&>svg]:h-3.5 [&>svg]:w-3.5 text-white/50", className)}
       {...props}
     >
       {children ?? <ChevronRight />}
@@ -101,7 +101,7 @@ function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<"span"
       data-slot="breadcrumb-ellipsis"
       role="presentation"
       aria-hidden="true"
-      className={cn("flex w-9 h-9 items-center justify-center", className)}
+      className={cn("flex w-9 h-9 items-center justify-center text-white/70 hover:text-white cursor-pointer", className)}
       {...props}
     >
       <MoreHorizontal className="h-4 w-4" />

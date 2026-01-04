@@ -38,7 +38,7 @@ export function DropdownMenuContent({ align = "end", children }: { align?: "star
   return (
     <div
       role="menu"
-      className={`absolute mt-2 min-w-40 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg p-1 z-50 ${
+      className={`absolute mt-2 min-w-40 rounded-md border border-white/10 bg-black/40 backdrop-blur-md shadow-lg p-1 z-50 ${
         align === "start" ? "left-0" : "right-0"
       }`}
     >
@@ -53,7 +53,7 @@ export function DropdownMenuItem({ onSelect, children }: { onSelect?: () => void
     <button
       type="button"
       role="menuitem"
-      className="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+      className="w-full text-left px-3 py-2 rounded-md hover:bg-white/10 text-white text-sm transition-colors"
       onClick={() => {
         onSelect?.();
         ctx.setOpen(false);
