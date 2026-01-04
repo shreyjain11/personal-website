@@ -21,15 +21,21 @@ const GitHubCalendar = dynamic(
 const currentYear = new Date().getFullYear();
 const years = [currentYear, currentYear - 1, currentYear - 2, currentYear - 3];
 
+interface ContributionDay {
+  date: string;
+  count: number;
+  level: number;
+}
+
 export function GitHubContributions({ username }: { username: string }) {
   const [mounted, setMounted] = useState(false);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const [isOpen, setIsOpen] = useState(false);
-  const [contributionData, setContributionData] = useState<any[]>([]);
+  const [contributionData, setContributionData] = useState<ContributionDay[]>([]);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const latestDataRef = useRef<any[]>([]);
+  const latestDataRef = useRef<ContributionDay[]>([]);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
