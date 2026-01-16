@@ -23,7 +23,7 @@ const accolades = [
   { logo: "/verbaAI logo.png", name: "International Biology Bowl Semifinalist (32 of ~1000)", url: "https://biologybowl.org/" },
   { logo: "/MindMeshLogo.png", name: "Top 12 National Biology Bowl", url: "https://www.nationalbiologybowl.org/" },
   { logo: "/verbaAI logo.png", name: "Provisional Patent Holder" },
-  { logo: "/MindMeshLogo.png", name: "The Harvard Undergraduate Research Journal Finalist", url: "https://www.thurj.org/" },
+  { logo: "/MindMeshLogo.png", name: "The Harvard Undergraduate Research Journal Finalist", url: "https://www.thurj.com/" },
   { logo: "/verbaAI logo.png", name: "USACO Gold Division" },
 ];
 

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Dock, DockIcon } from "./components/Dock";
-import { EncryptedText } from "./components/ui/encrypted-text";
 import { GitHubContributions } from "./components/GitHubContributions";
 import { useEffect, useRef, useState } from "react";
 
@@ -94,11 +93,7 @@ export default function Home() {
             className="text-6xl font-medium mb-2 text-white tracking-tight"
             style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif' }}
           >
-            <EncryptedText 
-              text="Shrey Jain"
-              revealDelayMs={150}
-              flipDelayMs={100}
-            />
+            Shrey Jain
           </h1>
           <h2 className="text-3xl font-semibold text-gray-200 mb-4 h-10" style={{ minHeight: 40 }}>{typewriter}</h2>
           <div

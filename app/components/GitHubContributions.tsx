@@ -133,7 +133,7 @@ export function GitHubContributions({ username }: { username: string }) {
 
   return (
     <div className="contribution-root">
-      <h3 className="text-2xl font-medium text-white mb-12">GitHub Contributions</h3>
+      <h3 className="text-2xl font-medium text-white" style={{ marginBottom: '28px' }}>GitHub Contributions</h3>
       
       <div className="flex items-center justify-between mb-6">
         <div className="relative">
