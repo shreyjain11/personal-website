@@ -60,7 +60,9 @@ export function GitHubContributions({ username }: { username: string }) {
         const dayData = latestDataRef.current.find(d => d.date === date);
         const count = dayData?.count ?? 0;
         
-        const dateObj = new Date(date || '');
+        // Parse date and add 1 day to fix the offset from GitHub's data
+        const dateObj = new Date(date + 'T12:00:00');
+        dateObj.setDate(dateObj.getDate() + 1);
         const formattedDate = dateObj.toLocaleDateString('en-US', { 
           weekday: 'short',
           month: 'short', 
