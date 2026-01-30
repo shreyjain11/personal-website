@@ -23,7 +23,7 @@ const GitHubCalendar = dynamic(
 );
 
 const currentYear = new Date().getFullYear();
-const years = [currentYear, currentYear - 1, currentYear - 2, currentYear - 3];
+const years = [currentYear, currentYear - 1, currentYear - 2];
 
 export function GitHubContributions({ username }: { username: string }) {
   const [mounted, setMounted] = useState(false);
