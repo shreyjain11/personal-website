@@ -8,13 +8,6 @@ const workExperiences = [
     url: "https://www.ericandwendyschmidtcenter.org/",
     title: "Evolutionary Genomic Researcher",
     description: "Developed deterministic, gradient-free explainability pipeline for evolutionary phylogenetic inference, computing per-residue attributions reproducibly."  },
-  {
-    company: "Project Physica",
-    logo: "/ProjectPhysicaLogo.png",
-    url: "https://projectphysica.org/",
-    title: "Founder and Lead Developer",
-    description: "Built a platform for students to learn physics through interactive simulations."
-  },
 ];
 
 const accolades = [
