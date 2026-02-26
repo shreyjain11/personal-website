@@ -18,13 +18,16 @@ const workExperiences = [
 ];
 
 const accolades = [
+  { logo: "/verbaAI logo.png", name: "USAJMO Qualifier", url: "https://artofproblemsolving.com/wiki/index.php/United_States_of_America_Junior_Mathematical_Olympiad?srsltid=AfmBOopaIYaUiUCbkhiatRit8sdcV9FvpCslrz3ocZmJOngwFE6gP31l" },
+  { logo: "/verbaAI logo.png", name: "Berkeley Math Tournament Guts Round Champion", url: "https://berkeley.mt/" },
   { logo: "/verbaAI logo.png", name: "Valedictorian (1 out of ~500)", url: "https://schools.friscoisd.org/campus/high-school/centennial/home" },
   { logo: "/MindMeshLogo.png", name: "International Research Olympiad Semifinalist (Top 10% of 4500)", url: "https://www.internationalresearcholympiad.org/" },
   { logo: "/verbaAI logo.png", name: "International Biology Bowl Semifinalist (32 of ~1000)", url: "https://biologybowl.org/" },
   { logo: "/MindMeshLogo.png", name: "Top 12 National Biology Bowl", url: "https://www.nationalbiologybowl.org/" },
-  { logo: "/verbaAI logo.png", name: "Provisional Patent Holder" },
+  { logo: "/verbaAI logo.png", name: "Provisional Patent Holder"},
   { logo: "/MindMeshLogo.png", name: "The Harvard Undergraduate Research Journal Finalist", url: "https://www.thurj.com/" },
-  { logo: "/verbaAI logo.png", name: "USACO Gold Division" },
+  { logo: "/verbaAI logo.png", name: "USACO Gold Division", url: "https://usaco.org/" },
+
 ];
 
 export default function Work() {
