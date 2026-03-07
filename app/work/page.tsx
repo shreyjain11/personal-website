@@ -11,6 +11,7 @@ const workExperiences = [
 ];
 
 const accolades = [
+  { logo: "/verbaAI logo.png", name: "Brown University Math Olympiad Individual Top Scorer" },
   { logo: "/verbaAI logo.png", name: "Berkeley Math Tournament Guts Round Champion", url: "https://berkeley.mt/" },
   { logo: "/verbaAI logo.png", name: "Valedictorian (1 out of ~500)", url: "https://schools.friscoisd.org/campus/high-school/centennial/home" },
   { logo: "/verbaAI logo.png", name: "International Biology Bowl Semifinalist (32 of ~1000)", url: "https://biologybowl.org/" },
