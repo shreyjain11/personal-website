@@ -1,13 +1,20 @@
 "use client";
 
+interface WorkExperience {
+  company: string;
+  logo?: string;
+  url: string;
+  title: string;
+  description?: string;
+}
 
-const workExperiences = [
+const workExperiences: WorkExperience[] = [
   {
-    company: "The Broad Institute of MIT and Harvard",
+    company: "Eric and Wendy Schmidt Institute",
     logo: "/Broad.jpeg",
     url: "https://www.ericandwendyschmidtcenter.org/",
-    title: "Evolutionary Genomic Researcher",
-    description: "Developed deterministic, gradient-free explainability pipeline for evolutionary phylogenetic inference, computing per-residue attributions reproducibly."  },
+    title: "Researcher",
+  },
 ];
 
 const accolades = [
@@ -46,7 +53,9 @@ export default function Work() {
               <div className="flex flex-col">
                 <span className="text-base font-medium text-white transition-colors duration-200 leading-tight">{work.company}</span>
                 <span className="text-sm text-white/70 mt-0.5 leading-snug">{work.title}</span>
-                <span className="text-sm text-white/70 mt-0.5 leading-snug">{work.description}</span>
+                {work.description && (
+                  <span className="text-sm text-white/70 mt-0.5 leading-snug">{work.description}</span>
+                )}
               </div>
             </a>
           ))}

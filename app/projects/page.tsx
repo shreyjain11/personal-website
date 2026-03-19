@@ -15,6 +15,12 @@ const projects: Project[] = [
     description: "Security tool that analyzes GitHub repositories for prompt injection attack potential and hotspots.",
   },
   {
+    name: "PaperPal",
+    url: "https://github.com/shreyjain11/PaperPal",
+    description:
+      "RL-powered research paper triage via iMessage with a contextual bandit and local Ollama LLM (zero API costs).",
+  },
+  {
     name: "Galaxy Viewer",
     url: "https://galaxy-viewer.vercel.app/",
     description: "A fun interactive 3D Milky Way galaxy viewer that lets you explore our galaxy in space with realistic spiral structure and star distribution.",
