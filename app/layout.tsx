@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./contexts/ThemeContext";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { VisitCounter } from "./components/VisitCounter";
+import { StarField } from "./components/StarField";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,7 +21,7 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Shrey Jain",
-  description: "Full-stack engineer & founder. Building AI products to create meaningful impact.",
+  description: "Computational biology researcher at the Eric and Wendy Schmidt Center. Building AI products to create meaningful impact.",
 };
 
 export default function RootLayout({
@@ -31,17 +31,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased relative`}> 
+      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased relative`}>
         <SpeedInsights />
-        <ThemeProvider>
-          <div className="relative z-10">
-            <div className="max-w-5xl mx-auto px-4 pt-6">
-              <AppBreadcrumb />
-            </div>
-            {children}
+        <StarField />
+        <div className="relative z-10">
+          <div className="max-w-5xl mx-auto px-4 pt-6">
+            <AppBreadcrumb />
           </div>
-          <VisitCounter />
-        </ThemeProvider> 
+          {children}
+        </div>
+        <VisitCounter />
       </body>
     </html>
   );
