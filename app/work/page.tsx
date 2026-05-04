@@ -26,7 +26,6 @@ const workExperiences: WorkExperience[] = [
 const accolades = [
   { name: "Brown University Math Olympiad — Individual Top Scorer", url: "https://www.brumo.org/" },
   { name: "Berkeley Math Tournament — Guts Round Champion", url: "https://berkeley.mt/" },
-  { name: "Valedictorian (1 of ~500)", url: "https://schools.friscoisd.org/campus/high-school/centennial/home" },
   { name: "International Biology Bowl — Semifinalist (32 of ~1000)", url: "https://biologybowl.org/" },
   { name: "National Biology Bowl — Top 12", url: "https://www.nationalbiologybowl.org/" },
   { name: "Provisional Patent Holder" },

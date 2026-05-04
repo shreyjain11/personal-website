@@ -132,10 +132,6 @@ export default function Home() {
             Computational biology researcher at the Eric and Wendy Schmidt Center.
             Building AI products to create meaningful impact.
           </p>
-          <p className="text-sm text-white/30 mb-9">
-            Centennial High School &mdash; Class of 2028
-          </p>
-
           {/* Social Icons */}
           <div className="flex items-center gap-5 mb-9">
             <a href="https://github.com/shreyjain11" target="_blank" rel="noopener noreferrer" aria-label="GitHub"
