@@ -152,6 +152,12 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
               </svg>
             </a>
+            <a href="https://scholar.google.com/citations?user=J9MEbCsAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" aria-label="Google Scholar"
+              className="text-white/35 hover:text-white transition-colors duration-200">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 10a8 8 0 0 1 7.162 3.44L24 9.5z"/>
+              </svg>
+            </a>
           </div>
 
           {/* Nav */}
