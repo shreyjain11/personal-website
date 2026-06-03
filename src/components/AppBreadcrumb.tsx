@@ -10,7 +10,7 @@ export function AppBreadcrumb() {
     <nav>
       <Link
         href="/"
-        className="inline-flex items-center gap-2 text-sm text-white/30 hover:text-white/70 transition-colors duration-300"
+        className="inline-flex items-center gap-2 text-sm text-foreground/30 hover:text-foreground/70 transition-colors duration-300"
       >
         <svg
           width="13" height="13" fill="none" stroke="currentColor"

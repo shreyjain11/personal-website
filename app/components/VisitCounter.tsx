@@ -53,7 +53,7 @@ export function VisitCounter() {
   if (!isLoaded) {
     return (
       <div className="fixed bottom-8 right-8 z-50">
-        <div className="text-xs font-mono text-black dark:text-black opacity-60">
+        <div className="text-xs font-mono text-foreground opacity-60">
           loading...
         </div>
       </div>
@@ -87,7 +87,7 @@ export function VisitCounter() {
 
   return (
     <div className="fixed bottom-8 right-8 z-50">
-      <div className="text-xs font-mono text-white opacity-60 hover:opacity-100 transition-all duration-300 cursor-default">
+      <div className="text-xs font-mono text-foreground opacity-60 hover:opacity-100 transition-all duration-300 cursor-default">
         {currentMessage.before && (
           <>
             <EncryptedText 
@@ -101,7 +101,7 @@ export function VisitCounter() {
         )}
         <NumberTicker 
           value={visits} 
-          className="inline-block text-xs font-mono text-white"
+          className="inline-block text-xs font-mono text-foreground"
           delay={0.5}
         />
         {currentMessage.after && (

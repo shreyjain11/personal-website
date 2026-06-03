@@ -86,7 +86,7 @@ export function StarField() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
+      className="star-field fixed inset-0 pointer-events-none"
       style={{ zIndex: 0, opacity: 0.75 }}
     />
   );

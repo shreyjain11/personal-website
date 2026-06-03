@@ -6,9 +6,16 @@ html, body {
 }
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #edeae3;
+  --foreground: #18161a;
   --font-inter: 'Inter', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #18161a;
+    --foreground: #edeae3;
+  }
 }
 
 @theme inline {
@@ -21,6 +28,7 @@ html, body {
 
 
 body {
+  background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
   margin: 0;
@@ -37,9 +45,25 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(ellipse at 50% -5%, #16162a 0%, #0a0a0a 60%);
+  background: radial-gradient(ellipse at 50% -5%, #e5dfd5 0%, #edeae3 60%);
   z-index: -1;
   pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  body::before {
+    background: radial-gradient(ellipse at 50% -5%, #221f2a 0%, #18161a 60%);
+  }
+}
+
+.star-field {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .star-field {
+    display: block;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
