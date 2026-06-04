@@ -53,10 +53,10 @@ export default function Work() {
                 <span className="text-sm font-medium text-foreground leading-tight">{work.company}</span>
                 <span className="text-sm text-foreground/50 mt-0.5">{work.title}</span>
                 {work.description && (
-                  <span className="text-xs text-foreground/35 mt-1">{work.description}</span>
+                  <span className="text-xs text-foreground/45 mt-1">{work.description}</span>
                 )}
               </div>
-              <span className="text-xs text-foreground/35 shrink-0 mt-0.5 tabular-nums">{work.date}</span>
+              <span className="text-xs text-foreground/45 shrink-0 mt-0.5 tabular-nums">{work.date}</span>
             </a>
           ))}
         </div>

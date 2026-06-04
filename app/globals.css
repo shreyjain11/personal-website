@@ -45,14 +45,14 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(ellipse at 50% -5%, #e5dfd5 0%, #edeae3 60%);
+  background: radial-gradient(ellipse at 50% 0%, #e8e2d8 0%, #edeae3 55%);
   z-index: -1;
   pointer-events: none;
 }
 
 @media (prefers-color-scheme: dark) {
   body::before {
-    background: radial-gradient(ellipse at 50% -5%, #221f2a 0%, #18161a 60%);
+    background: radial-gradient(ellipse at 50% 0%, #201d27 0%, #18161a 55%);
   }
 }
 

@@ -25,7 +25,8 @@ const currentYear = new Date().getFullYear();
 const years = [currentYear, currentYear - 1, currentYear - 2];
 
 const DARK_THEME = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"] as const;
-const LIGHT_THEME = ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"] as const;
+// Warm grey empty cell to match cream background; earthy greens for harmony
+const LIGHT_THEME = ["#d8d3cb", "#b7ddb0", "#74c476", "#31a354", "#006d2c"] as const;
 
 export function GitHubContributions({ username }: { username: string }) {
   const [mounted, setMounted] = useState(false);
@@ -149,7 +150,7 @@ export function GitHubContributions({ username }: { username: string }) {
         <div className="relative">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center gap-3 bg-foreground/5 border border-foreground/10 text-foreground px-4 py-2 rounded-lg text-sm cursor-pointer hover:bg-foreground/10 transition-all duration-200 focus:outline-none min-w-[120px] justify-between"
+            className="flex items-center gap-3 bg-foreground/[0.04] border border-foreground/15 text-foreground/80 px-4 py-2 rounded-lg text-sm cursor-pointer hover:bg-foreground/[0.07] hover:text-foreground transition-all duration-200 focus:outline-none min-w-[120px] justify-between"
           >
             <span>{selectedYear}</span>
             <svg
@@ -279,7 +280,7 @@ export function GitHubContributions({ username }: { username: string }) {
 
         .calendar-wrapper text {
           fill: var(--foreground) !important;
-          opacity: 0.5;
+          opacity: 0.45;
         }
 
         .calendar-wrapper rect {
