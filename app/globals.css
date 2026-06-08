@@ -56,16 +56,6 @@ body::before {
   }
 }
 
-.star-field {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  .star-field {
-    display: block;
-  }
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-playfair), 'Playfair Display', serif;
   margin: 0;

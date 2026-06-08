@@ -5,7 +5,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { VisitCounter } from "./components/VisitCounter";
-import { StarField } from "./components/StarField";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,7 +32,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased relative`}>
         <SpeedInsights />
-        <StarField />
         <div className="relative z-10">
           <div className="max-w-5xl mx-auto px-4 pt-6">
             <AppBreadcrumb />
