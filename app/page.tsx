@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { GitHubContributions } from "./components/GitHubContributions";
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
@@ -128,43 +127,10 @@ export default function Home() {
             Researcher &nbsp;·&nbsp; Engineer &nbsp;·&nbsp; Builder
           </p>
 
-          <p className="text-[15px] text-foreground/60 leading-relaxed mb-3">
+          <p className="text-[15px] text-foreground/60 leading-relaxed">
             Computational biology researcher at the Eric and Wendy Schmidt Center.
             Building AI products to create meaningful impact.
           </p>
-          {/* Social Icons */}
-          <div className="flex items-center gap-5 mb-9">
-            <a href="https://github.com/shreyjain11" target="_blank" rel="noopener noreferrer" aria-label="GitHub"
-              className="text-foreground/45 hover:text-foreground transition-colors duration-200">
-              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0.297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387 0.6 0.113 0.82-0.258 0.82-0.577 0-0.285-0.011-1.04-0.017-2.04-3.338 0.726-4.042-1.61-4.042-1.61-0.546-1.387-1.333-1.756-1.333-1.756-1.089-0.745 0.084-0.729 0.084-0.729 1.205 0.084 1.84 1.236 1.84 1.236 1.07 1.834 2.809 1.304 3.495 0.997 0.108-0.775 0.418-1.305 0.762-1.605-2.665-0.305-5.466-1.334-5.466-5.931 0-1.31 0.469-2.381 1.236-3.221-0.124-0.303-0.535-1.523 0.117-3.176 0 0 1.008-0.322 3.301 1.23 0.957-0.266 1.983-0.399 3.003-0.404 1.02 0.005 2.047 0.138 3.006 0.404 2.291-1.553 3.297-1.23 3.297-1.23 0.653 1.653 0.242 2.873 0.119 3.176 0.77 0.84 1.235 1.911 1.235 3.221 0 4.609-2.803 5.624-5.475 5.921 0.43 0.372 0.823 1.102 0.823 2.222 0 1.606-0.015 2.898-0.015 3.293 0 0.322 0.216 0.694 0.825 0.576 4.765-1.589 8.199-6.084 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-              </svg>
-            </a>
-            <a href="https://x.com/jain11shrey" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X"
-              className="text-foreground/45 hover:text-foreground transition-colors duration-200">
-              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-            </a>
-            <a href="mailto:mailshreyjain@gmail.com" aria-label="Email"
-              className="text-foreground/45 hover:text-foreground transition-colors duration-200">
-              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-              </svg>
-            </a>
-            <a href="https://scholar.google.com/citations?user=J9MEbCsAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" aria-label="Google Scholar"
-              className="text-foreground/45 hover:text-foreground transition-colors duration-200">
-              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 10a8 8 0 0 1 7.162 3.44L24 9.5z"/>
-              </svg>
-            </a>
-          </div>
-
-          {/* Nav */}
-          <div className="flex gap-6 text-foreground/45">
-            <Link href="/work" className="text-sm font-medium hover:text-foreground transition-colors duration-200">work</Link>
-            <Link href="/projects" className="text-sm font-medium hover:text-foreground transition-colors duration-200">projects</Link>
-          </div>
         </motion.div>
       </main>
 

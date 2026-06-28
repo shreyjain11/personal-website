@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 
 export const metadata: Metadata = {
   title: "Projects — Shrey Jain",
@@ -26,17 +27,20 @@ const projects: Project[] = [
     tag: "ML",
   },
   {
-    name: "Galaxy Viewer",
-    url: "https://galaxy-viewer.vercel.app/",
-    description: "Interactive 3D Milky Way explorer with realistic spiral structure and star distribution.",
-    tag: "3D",
+    name: "Veritas",
+    url: "https://veritas-viewer.vercel.app/",
+    description: "Model-agnostic auditor that quantifies how much of an ML model's benchmark score comes from data leakage, then recomputes an honest score — without ever running the model.",
+    tag: "ML",
   },
 ];
 
 export default function Projects() {
   return (
-    <div className="min-h-screen text-foreground font-inter px-4 py-12">
+    <div className="min-h-screen text-foreground font-inter px-4 pt-28 pb-12">
       <div className="max-w-2xl mx-auto">
+        <div className="mb-10">
+          <AppBreadcrumb />
+        </div>
 
         <h1 className="text-xl font-semibold mb-8 text-foreground/90 tracking-tight">projects</h1>
 

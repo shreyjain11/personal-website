@@ -3,8 +3,8 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
-import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { VisitCounter } from "./components/VisitCounter";
+import { GlassDock } from "./components/GlassDock";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,11 +32,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased relative`}>
         <SpeedInsights />
-        <div className="relative z-10">
-          <div className="max-w-5xl mx-auto px-4 pt-6">
-            <AppBreadcrumb />
+        {/*
+          #lg-root is the LiquidGlass root. Its direct children are, in paint
+          order: the capturable gradient (.lg-bg), the page content, and the
+          glass dock. The dock must be a direct child of this root.
+        */}
+        <div id="lg-root" className="relative min-h-screen">
+          <div className="lg-bg" aria-hidden />
+          <div className="relative z-10">
+            {children}
           </div>
-          {children}
+          <GlassDock />
         </div>
         <VisitCounter />
       </body>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 
 export const metadata: Metadata = {
   title: "Work — Shrey Jain",
@@ -35,8 +36,11 @@ const accolades = [
 
 export default function Work() {
   return (
-    <div className="min-h-screen text-foreground font-inter px-4 py-12">
+    <div className="min-h-screen text-foreground font-inter px-4 pt-28 pb-12">
       <div className="max-w-2xl mx-auto">
+        <div className="mb-10">
+          <AppBreadcrumb />
+        </div>
 
         <h1 className="text-xl font-semibold mb-8 text-foreground/90 tracking-tight">work</h1>
 
