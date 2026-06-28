@@ -76,7 +76,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <main className="flex flex-col md:flex-row items-center justify-center flex-1 w-full px-4 max-w-5xl mx-auto gap-10 md:gap-20 py-12 md:py-24">
+      <main className="flex flex-col md:flex-row items-center justify-center flex-1 w-full px-4 max-w-5xl mx-auto gap-10 md:gap-20 pt-28 pb-12 md:py-24">
 
         {/* Profile Image with 3D tilt */}
         <motion.div

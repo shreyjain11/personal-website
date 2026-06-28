@@ -43,6 +43,11 @@ export function GlassDock() {
     const dock = dockRef.current;
     if (!root || !dock) return;
 
+    // WebGL liquid glass is heavy and renders unreliably on mobile (esp. iOS
+    // Safari), so on small screens we skip it and keep the lightweight CSS
+    // frosted fallback (.lg-fallback stays applied).
+    if (window.matchMedia("(max-width: 767px)").matches) return;
+
     let instance: { destroy: () => void; markChanged: () => void } | undefined;
     let raf = 0;
     let cancelled = false;
@@ -136,7 +141,7 @@ export function GlassDock() {
         aria-label="Site navigation"
         onMouseMove={onMove}
         onMouseLeave={() => setHover(null)}
-        className="lg-fallback fixed top-6 left-6 z-50 flex h-14 items-center gap-1 rounded-full px-2.5"
+        className="lg-fallback fixed top-6 left-1/2 -translate-x-1/2 md:left-6 md:translate-x-0 z-50 flex h-14 items-center gap-0.5 px-2 md:gap-1 md:px-2.5 rounded-full"
       >
         {/* Links sit above the WebGL canvas the library injects, so they stay
             crisp and clickable. */}
@@ -253,7 +258,7 @@ function DockLink({
       data-tip={label}
       aria-label={label}
       aria-current={active ? "page" : undefined}
-      className={`relative z-[1] flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-200 ${
+      className={`relative z-[1] flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full transition-colors duration-200 ${
         active ? "text-foreground" : "text-foreground/55 hover:text-foreground"
       }`}
     >
@@ -278,7 +283,7 @@ function DockExternal({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="relative z-[1] flex h-10 w-10 items-center justify-center rounded-full text-foreground/55 hover:text-foreground transition-colors duration-200"
+      className="relative z-[1] flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full text-foreground/55 hover:text-foreground transition-colors duration-200"
     >
       {children}
     </a>
