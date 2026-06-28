@@ -68,8 +68,9 @@ export function GitHubContributions({ username }: { username: string }) {
         const dayData = latestDataRef.current.find(d => d.date === date);
         const count = dayData?.count ?? 0;
 
+        // Parse at local noon so the weekday/label can't drift across the
+        // UTC boundary. Use the date as-is — no offset.
         const dateObj = new Date(date + 'T12:00:00');
-        dateObj.setDate(dateObj.getDate() + 1);
         const formattedDate = dateObj.toLocaleDateString('en-US', {
           weekday: 'short',
           month: 'short',
