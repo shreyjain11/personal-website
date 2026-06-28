@@ -74,18 +74,20 @@ export function GlassDock() {
           defaults: {
             blurAmount: 0.16,
             refraction: 0.9,
-            chromAberration: 0.12,
-            edgeHighlight: 0.16,
-            specular: 0.6,
-            fresnel: 1,
-            distortion: 0.14,
-            saturation: 0.12,
-            tintStrength: 0.12,
+            chromAberration: 0.1,
+            // Bright contributors kept low so the pill doesn't glow with a
+            // white rim/specular bar (very visible in dark mode).
+            edgeHighlight: 0.04,
+            specular: 0.08,
+            fresnel: 0.25,
+            distortion: 0.12,
+            saturation: 0.1,
+            tintStrength: 0.1,
             zRadius: 52,
             cornerRadius: 28,
-            shadowOpacity: 0.28,
-            shadowSpread: 20,
-            shadowOffsetY: 7,
+            shadowOpacity: 0.22,
+            shadowSpread: 14,
+            shadowOffsetY: 6,
           },
         });
         if (cancelled) {
