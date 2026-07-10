@@ -15,6 +15,12 @@ interface Project {
 
 const projects: Project[] = [
   {
+    name: "Deck",
+    url: "https://github.com/shreyjain11/deck",
+    description: "Control your Claude Code sessions from your phone — live status cards, a per-session chat view, a real terminal, and push notifications with approve/deny, all served over Tailscale.",
+    tag: "tools",
+  },
+  {
     name: "PromptScan",
     url: "https://prompt-injection-scanner.vercel.app",
     description: "Security tool that analyzes GitHub repositories for prompt injection vulnerabilities and attack hotspots.",
