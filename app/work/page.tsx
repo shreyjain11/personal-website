@@ -19,12 +19,12 @@ const workExperiences: WorkExperience[] = [
     company: "Eric and Wendy Schmidt Center",
     url: "https://www.ericandwendyschmidtcenter.org/",
     title: "Researcher",
-    date: "Jun 2025 – Present",
+    date: "Jun 2025 — Present",
     description: "Computational biology research at the Broad Institute.",
   },
 ];
 
-const accolades = [
+const accolades: { name: string; url?: string }[] = [
   { name: "Brown University Math Olympiad — Individual Top Scorer", url: "https://www.brumo.org/" },
   { name: "Berkeley Math Tournament — Guts Round Champion", url: "https://berkeley.mt/" },
   { name: "International Biology Bowl — Semifinalist (32 of ~1000)", url: "https://biologybowl.org/" },
@@ -36,62 +36,99 @@ const accolades = [
 
 export default function Work() {
   return (
-    <div className="min-h-screen text-foreground font-inter px-4 pt-28 pb-12">
+    <div className="min-h-screen text-foreground font-inter px-5 pt-28 pb-24">
       <div className="max-w-2xl mx-auto">
-        <div className="mb-10">
+        <div className="mb-12 lg-rise">
           <AppBreadcrumb />
         </div>
 
-        <h1 className="text-xl font-semibold mb-8 text-foreground/90 tracking-tight">work</h1>
+        <header className="mb-14 lg-rise" style={{ animationDelay: "0.05s" }}>
+          <h1 className="text-4xl md:text-5xl tracking-tight leading-none">Work</h1>
+          <p className="mt-4 max-w-md text-[15px] leading-relaxed text-foreground/50">
+            Where I&apos;ve worked, and a few things I&apos;m proud of along the way.
+          </p>
+        </header>
 
-        <div className="flex flex-col gap-2">
-          {workExperiences.map((work) => (
-            <a
+        {/* Experience */}
+        <ol className="border-b border-foreground/10">
+          {workExperiences.map((work, i) => (
+            <li
               key={work.company}
-              href={work.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start justify-between gap-4 px-5 py-4 rounded-xl border-l border-transparent hover:border-foreground/20 hover:bg-foreground/[0.03] transition-all duration-200 group"
+              className="lg-rise"
+              style={{ animationDelay: `${0.12 + i * 0.07}s` }}
             >
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-foreground leading-tight">{work.company}</span>
-                <span className="text-sm text-foreground/50 mt-0.5">{work.title}</span>
-                {work.description && (
-                  <span className="text-xs text-foreground/45 mt-1">{work.description}</span>
-                )}
-              </div>
-              <span className="text-xs text-foreground/45 shrink-0 mt-0.5 tabular-nums">{work.date}</span>
-            </a>
-          ))}
-        </div>
-
-        <h2 className="text-xl font-semibold mt-14 mb-6 text-foreground/90 tracking-tight">accolades</h2>
-
-        <div className="flex flex-col gap-1">
-          {accolades.map((accolade) =>
-            accolade.url ? (
               <a
-                key={accolade.name}
-                href={accolade.url}
+                href={work.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 px-5 py-3 rounded-xl border-l border-transparent hover:border-foreground/20 hover:bg-foreground/[0.03] transition-all duration-200 group"
+                className="group grid grid-cols-[1fr_auto] items-baseline gap-x-4 border-t border-foreground/10 py-6 sm:gap-x-6 sm:py-7"
               >
-                <span className="w-1 h-1 rounded-full bg-foreground/20 shrink-0" />
-                <span className="text-sm text-foreground/70 group-hover:text-foreground/90 transition-colors">{accolade.name}</span>
+                <div className="min-w-0">
+                  <h2 className="text-xl tracking-tight text-foreground/90 transition-colors duration-200 group-hover:text-foreground">
+                    {work.company}
+                  </h2>
+                  <p className="mt-1 text-sm text-foreground/60">{work.title}</p>
+                  {work.description && (
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/50">
+                      {work.description}
+                    </p>
+                  )}
+                </div>
+                <span className="shrink-0 font-mono text-xs tabular-nums text-foreground/40">
+                  {work.date}
+                </span>
               </a>
-            ) : (
-              <div
-                key={accolade.name}
-                className="flex items-center gap-3 px-5 py-3 rounded-xl"
-              >
-                <span className="w-1 h-1 rounded-full bg-foreground/20 shrink-0" />
-                <span className="text-sm text-foreground/70">{accolade.name}</span>
-              </div>
-            )
-          )}
-        </div>
+            </li>
+          ))}
+        </ol>
 
+        {/* Accolades */}
+        <h2 className="mb-2 mt-16 text-2xl tracking-tight lg-rise" style={{ animationDelay: "0.2s" }}>
+          Accolades
+        </h2>
+        <ul className="border-b border-foreground/10">
+          {accolades.map((accolade, i) => {
+            const inner = (
+              <>
+                <span className="text-sm leading-relaxed text-foreground/70 transition-colors duration-200 group-hover:text-foreground">
+                  {accolade.name}
+                </span>
+                {accolade.url && (
+                  <svg
+                    className="mt-1 shrink-0 text-foreground/20 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground/50"
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M7 17L17 7M17 7H7M17 7v10" />
+                  </svg>
+                )}
+              </>
+            );
+            const rowClass =
+              "group flex items-baseline justify-between gap-4 border-t border-foreground/10 py-3.5";
+            return (
+              <li
+                key={accolade.name}
+                className="lg-rise"
+                style={{ animationDelay: `${0.24 + i * 0.04}s` }}
+              >
+                {accolade.url ? (
+                  <a href={accolade.url} target="_blank" rel="noopener noreferrer" className={rowClass}>
+                    {inner}
+                  </a>
+                ) : (
+                  <div className={rowClass}>{inner}</div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );

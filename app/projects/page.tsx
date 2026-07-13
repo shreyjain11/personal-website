@@ -10,79 +10,93 @@ interface Project {
   name: string;
   url: string;
   description: string;
-  tag?: string;
 }
 
 const projects: Project[] = [
   {
     name: "Deck",
     url: "https://github.com/shreyjain11/deck",
-    description: "Control your Claude Code sessions from your phone — live status cards, a per-session chat view, a real terminal, and push notifications with approve/deny, all served over Tailscale.",
-    tag: "tools",
+    description:
+      "Control your Claude Code sessions from your phone — live status cards, a per-session chat view, a real terminal, and push notifications with approve/deny, all served over Tailscale.",
   },
   {
     name: "PromptScan",
     url: "https://prompt-injection-scanner.vercel.app",
-    description: "Security tool that analyzes GitHub repositories for prompt injection vulnerabilities and attack hotspots.",
-    tag: "security",
+    description:
+      "Security tool that analyzes GitHub repositories for prompt injection vulnerabilities and attack hotspots.",
   },
   {
     name: "PaperPal",
     url: "https://github.com/shreyjain11/PaperPal",
-    description: "RL-powered research paper triage via iMessage using a contextual bandit and local Ollama LLM — zero API costs.",
-    tag: "ML",
+    description:
+      "RL-powered research paper triage over iMessage using a contextual bandit and a local Ollama LLM — zero API costs.",
   },
   {
     name: "Veritas",
     url: "https://veritas-viewer.vercel.app/",
-    description: "Model-agnostic auditor that quantifies how much of an ML model's benchmark score comes from data leakage, then recomputes an honest score — without ever running the model.",
-    tag: "ML",
+    description:
+      "Model-agnostic auditor that quantifies how much of an ML model's benchmark score comes from data leakage, then recomputes an honest score — without ever running the model.",
   },
 ];
 
 export default function Projects() {
   return (
-    <div className="min-h-screen text-foreground font-inter px-4 pt-28 pb-12">
+    <div className="min-h-screen text-foreground font-inter px-5 pt-28 pb-24">
       <div className="max-w-2xl mx-auto">
-        <div className="mb-10">
+        <div className="mb-12 lg-rise">
           <AppBreadcrumb />
         </div>
 
-        <h1 className="text-xl font-semibold mb-8 text-foreground/90 tracking-tight">projects</h1>
+        <header className="mb-14 lg-rise" style={{ animationDelay: "0.05s" }}>
+          <h1 className="text-4xl md:text-5xl tracking-tight leading-none">Projects</h1>
+          <p className="mt-4 max-w-md text-[15px] leading-relaxed text-foreground/50">
+            Tools, research, and experiments — mostly where AI meets biology.
+          </p>
+        </header>
 
-        <div className="flex flex-col gap-2">
-          {projects.map((project) => (
-            <a
+        <ol className="border-b border-foreground/10">
+          {projects.map((project, i) => (
+            <li
               key={project.name}
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start justify-between gap-4 px-5 py-4 rounded-xl border-l border-transparent hover:border-foreground/20 hover:bg-foreground/[0.03] transition-all duration-200 group"
+              className="lg-rise"
+              style={{ animationDelay: `${0.12 + i * 0.07}s` }}
             >
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-sm font-medium text-foreground leading-tight group-hover:text-foreground/90 transition-colors">
-                    {project.name}
-                  </span>
-                  {project.tag && (
-                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-foreground/8 text-foreground/40 uppercase tracking-wider">
-                      {project.tag}
-                    </span>
-                  )}
-                </div>
-                <span className="text-sm text-foreground/50 leading-snug">{project.description}</span>
-              </div>
-              <svg
-                className="shrink-0 mt-0.5 text-foreground/20 group-hover:text-foreground/50 transition-colors"
-                width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group grid grid-cols-[1.75rem_1fr_auto] items-baseline gap-x-4 border-t border-foreground/10 py-6 sm:gap-x-6 sm:py-7"
               >
-                <path d="M7 17L17 7M17 7H7M17 7v10"/>
-              </svg>
-            </a>
-          ))}
-        </div>
+                <span className="font-mono text-xs tabular-nums text-foreground/30 transition-colors duration-300 group-hover:text-foreground/60">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
 
+                <div className="min-w-0">
+                  <h2 className="text-xl tracking-tight text-foreground/90 transition-colors duration-200 group-hover:text-foreground">
+                    {project.name}
+                  </h2>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground/50">
+                    {project.description}
+                  </p>
+                </div>
+
+                <svg
+                  className="mt-1 shrink-0 text-foreground/25 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground/60"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M7 17L17 7M17 7H7M17 7v10" />
+                </svg>
+              </a>
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   );
