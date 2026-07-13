@@ -42,11 +42,8 @@ export default function Work() {
           <AppBreadcrumb />
         </div>
 
-        <header className="mb-14 lg-rise" style={{ animationDelay: "0.05s" }}>
+        <header className="mb-10 lg-rise" style={{ animationDelay: "0.05s" }}>
           <h1 className="text-4xl md:text-5xl tracking-tight leading-none">Work</h1>
-          <p className="mt-4 max-w-md text-[15px] leading-relaxed text-foreground/50">
-            Where I&apos;ve worked, and a few things I&apos;m proud of along the way.
-          </p>
         </header>
 
         {/* Experience */}
@@ -83,7 +80,7 @@ export default function Work() {
         </ol>
 
         {/* Accolades */}
-        <h2 className="mb-2 mt-16 text-2xl tracking-tight lg-rise" style={{ animationDelay: "0.2s" }}>
+        <h2 className="mb-4 mt-14 text-2xl tracking-tight lg-rise" style={{ animationDelay: "0.2s" }}>
           Accolades
         </h2>
         <ul className="border-b border-foreground/10">
