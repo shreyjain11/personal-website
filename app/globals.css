@@ -64,11 +64,14 @@ body {
  * effect takes over (see GlassDock.tsx).
  */
 .lg-fallback {
-  background-color: color-mix(in srgb, var(--foreground) 5%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  /* Neutral, slightly-tinted frost (not a washed-out white block) that reads
+     as an intentional glass chip. Strong blur + saturate does the work; the
+     halo shadow is gone so it doesn't float as a light blob. */
+  background-color: color-mix(in srgb, var(--foreground) 7%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 /*
