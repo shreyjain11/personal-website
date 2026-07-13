@@ -79,22 +79,25 @@ export function GlassDock() {
           root,
           glassElements: [dock],
           defaults: {
-            blurAmount: 0.16,
-            refraction: 0.9,
-            chromAberration: 0.1,
-            // Bright contributors kept low so the pill doesn't glow with a
-            // white rim/specular bar (very visible in dark mode).
-            edgeHighlight: 0.04,
-            specular: 0.08,
-            fresnel: 0.25,
-            distortion: 0.12,
-            saturation: 0.1,
-            tintStrength: 0.1,
-            zRadius: 52,
+            blurAmount: 0.12,
+            refraction: 0.85,
+            chromAberration: 0.06,
+            // Zero out every light-producing contributor. On a near-uniform
+            // background these are the only things that draw a visible light
+            // rim/frame around the pill (the "white thing"); pure refraction
+            // + blur can't. Keep it matte glass with a soft dark shadow.
+            edgeHighlight: 0,
+            specular: 0,
+            fresnel: 0,
+            distortion: 0.08,
+            saturation: 0,
+            tintStrength: 0,
+            brightness: -0.03,
+            zRadius: 46,
             cornerRadius: 28,
-            shadowOpacity: 0.22,
-            shadowSpread: 14,
-            shadowOffsetY: 6,
+            shadowOpacity: 0.18,
+            shadowSpread: 8,
+            shadowOffsetY: 4,
           },
         });
         if (cancelled) {
