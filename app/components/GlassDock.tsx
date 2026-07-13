@@ -43,10 +43,12 @@ export function GlassDock() {
     const dock = dockRef.current;
     if (!root || !dock) return;
 
-    // WebGL liquid glass is heavy and renders unreliably on mobile (esp. iOS
-    // Safari), so on small screens we skip it and keep the lightweight CSS
-    // frosted fallback (.lg-fallback stays applied).
-    if (window.matchMedia("(max-width: 767px)").matches) return;
+    // WebGL liquid glass is heavy and renders unreliably on touch devices
+    // (esp. iOS Safari), so we skip it there and keep the lightweight CSS
+    // frosted fallback (.lg-fallback stays applied). Gate on pointer type,
+    // not viewport width — otherwise a narrow *desktop* window (with a mouse)
+    // wrongly falls back too.
+    if (window.matchMedia("(pointer: coarse)").matches) return;
 
     let instance: { destroy: () => void; markChanged: () => void } | undefined;
     let raf = 0;
