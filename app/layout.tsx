@@ -43,6 +43,7 @@ export default function RootLayout({
           </div>
           <GlassDock />
         </div>
+        <div className="grain" aria-hidden />
         <VisitCounter />
       </body>
     </html>

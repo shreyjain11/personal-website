@@ -56,6 +56,59 @@ body {
   }
 }
 
+/* Very slow, soft drifting light — adds gentle depth without calling
+   attention to itself. */
+.lg-bg::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(38% 44% at 26% 16%, rgba(255, 255, 255, 0.08), transparent 70%),
+    radial-gradient(44% 52% at 82% 8%, rgba(255, 250, 240, 0.07), transparent 72%);
+  filter: blur(36px);
+  animation: lg-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-color-scheme: dark) {
+  .lg-bg::after {
+    background:
+      radial-gradient(38% 44% at 26% 16%, rgba(150, 140, 200, 0.07), transparent 70%),
+      radial-gradient(44% 52% at 82% 8%, rgba(255, 255, 255, 0.04), transparent 72%);
+  }
+}
+
+@keyframes lg-drift {
+  from {
+    transform: translate3d(-1.5%, -1%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(2.5%, 1.5%, 0) scale(1.06);
+  }
+}
+
+/* Fine film grain over the page for a tactile, print-like finish. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  .grain {
+    opacity: 0.06;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lg-bg::after {
+    animation: none;
+  }
+}
+
 /*
  * Frosted-glass dock (see GlassDock.tsx). Pure CSS backdrop-filter — a real
  * blur of the page behind the pill. Every tint/border/shadow here is a
