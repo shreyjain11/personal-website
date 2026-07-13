@@ -47,11 +47,8 @@ export default function Projects() {
           <AppBreadcrumb />
         </div>
 
-        <header className="mb-14 lg-rise" style={{ animationDelay: "0.05s" }}>
+        <header className="mb-10 lg-rise" style={{ animationDelay: "0.05s" }}>
           <h1 className="text-4xl md:text-5xl tracking-tight leading-none">Projects</h1>
-          <p className="mt-4 max-w-md text-[15px] leading-relaxed text-foreground/50">
-            Tools, research, and experiments — mostly where AI meets biology.
-          </p>
         </header>
 
         <ol className="border-b border-foreground/10">
