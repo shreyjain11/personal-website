@@ -80,9 +80,11 @@ export default function Work() {
         </ol>
 
         {/* Accolades */}
-        <h2 className="mb-4 mt-14 text-2xl tracking-tight lg-rise" style={{ animationDelay: "0.2s" }}>
-          Accolades
-        </h2>
+        {/* Spacing lives on this wrapper: the global `h1..h6 { margin: 0 }`
+            rule overrides margin utilities set directly on the heading. */}
+        <div className="mb-5 mt-16 lg-rise" style={{ animationDelay: "0.2s" }}>
+          <h2 className="text-2xl tracking-tight">Accolades</h2>
+        </div>
         <ul className="border-b border-foreground/10">
           {accolades.map((accolade, i) => {
             const inner = (
