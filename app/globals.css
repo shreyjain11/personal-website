@@ -39,10 +39,8 @@ body {
 }
 
 /*
- * Page gradient lives on a real element (.lg-bg) inside #lg-root rather than
- * on body::before, so the LiquidGlass dock can rasterize and refract it.
- * (LiquidGlass never captures the root itself — backgrounds must be a
- * capturable sibling element inside the root.)
+ * Page gradient, rendered as a real element behind the content (absolute,
+ * z-0) so the dock's backdrop-filter blurs it.
  */
 .lg-bg {
   position: absolute;
@@ -59,14 +57,11 @@ body {
 }
 
 /*
- * CSS-only frosted-glass fallback for the dock, used before LiquidGlass
- * initializes and if WebGL/init is unavailable. Removed once the WebGL
- * effect takes over (see GlassDock.tsx).
+ * Frosted-glass dock (see GlassDock.tsx). Pure CSS backdrop-filter — a real
+ * blur of the page behind the pill. Every tint/border/shadow here is a
+ * neutral or DARK value, so there is no light rim or halo in any theme.
  */
-.lg-fallback {
-  /* Neutral, slightly-tinted frost (not a washed-out white block) that reads
-     as an intentional glass chip. Strong blur + saturate does the work; the
-     halo shadow is gone so it doesn't float as a light blob. */
+.lg-dock {
   background-color: color-mix(in srgb, var(--foreground) 7%, transparent);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);

@@ -2,28 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 
 /**
- * Floating liquid-glass navigation dock, shown on every page.
+ * Floating glass navigation dock, shown on every page.
  *
- * Two effects are combined here:
+ * The pill is a pure-CSS frosted glass (`.lg-dock` in globals.css) — a real
+ * `backdrop-filter` blur of the page behind it. We use CSS rather than the
+ * WebGL liquid-glass library because CSS renders identically and reliably on
+ * every browser/device (the WebGL version was janky on iOS and drew a stray
+ * light rim that was impossible to verify headlessly).
  *
- *  1. The pill itself is real WebGL glass via @ybouane/liquidglass, which
- *     refracts the page content behind it. The pill must be a *direct child*
- *     of the LiquidGlass root (#lg-root in layout.tsx); the gradient + page
- *     are the other direct children that get refracted. The library is
- *     browser/WebGL-only, so it's dynamically imported inside an effect and
- *     never runs on the server. If WebGL/init fails, the `.lg-fallback` class
- *     keeps it looking like frosted glass.
- *
- *  2. A Vercel-style hover tooltip (recreated from Skiper UI's "skiper43"
- *     using `motion`) springs/slides between icons with a clip-path label
- *     reveal. It's rendered through a portal to <body> — i.e. OUTSIDE the
- *     LiquidGlass root — so its constant animation never triggers a glass
- *     re-capture. It's styled as frosted glass to blend with the pill.
+ * On hover, a Vercel-style tooltip (recreated from Skiper UI's "skiper43"
+ * with `motion`) springs/slides between icons with a clip-path label reveal.
+ * It's portaled to <body> and never intercepts pointer events.
  */
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
@@ -31,96 +25,11 @@ const ease = [0.25, 0.46, 0.45, 0.94] as const;
 type Hover = { x: number; y: number; label: string };
 
 export function GlassDock() {
-  const dockRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const [hover, setHover] = useState<Hover | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
-
-  useEffect(() => {
-    const root = document.getElementById("lg-root");
-    const dock = dockRef.current;
-    if (!root || !dock) return;
-
-    // WebGL liquid glass is heavy and renders unreliably on touch devices
-    // (esp. iOS Safari), so we skip it there and keep the lightweight CSS
-    // frosted fallback (.lg-fallback stays applied). Gate on pointer type,
-    // not viewport width — otherwise a narrow *desktop* window (with a mouse)
-    // wrongly falls back too.
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-
-    let instance: { destroy: () => void; markChanged: () => void } | undefined;
-    let raf = 0;
-    let cancelled = false;
-
-    // Coalesce scroll/resize bursts into one markChanged per frame.
-    const mark = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        instance?.markChanged();
-      });
-    };
-
-    (async () => {
-      try {
-        // Fonts must be loaded before the dock's text is rasterized.
-        await document.fonts?.ready;
-        if (cancelled) return;
-
-        const { LiquidGlass } = await import("@ybouane/liquidglass");
-        if (cancelled) return;
-
-        // Drop the CSS fallback so its background isn't captured into the glass.
-        dock.classList.remove("lg-fallback");
-
-        instance = await LiquidGlass.init({
-          root,
-          glassElements: [dock],
-          defaults: {
-            blurAmount: 0.12,
-            refraction: 0.85,
-            chromAberration: 0.06,
-            // Zero out every light-producing contributor. On a near-uniform
-            // background these are the only things that draw a visible light
-            // rim/frame around the pill (the "white thing"); pure refraction
-            // + blur can't. Keep it matte glass with a soft dark shadow.
-            edgeHighlight: 0,
-            specular: 0,
-            fresnel: 0,
-            distortion: 0.08,
-            saturation: 0,
-            tintStrength: 0,
-            brightness: -0.03,
-            zRadius: 46,
-            cornerRadius: 28,
-            shadowOpacity: 0.18,
-            shadowSpread: 8,
-            shadowOffsetY: 4,
-          },
-        });
-        if (cancelled) {
-          instance.destroy();
-          return;
-        }
-
-        window.addEventListener("scroll", mark, { passive: true });
-        window.addEventListener("resize", mark);
-      } catch (err) {
-        console.warn("LiquidGlass unavailable; using CSS fallback", err);
-        dock.classList.add("lg-fallback");
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-      if (raf) cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", mark);
-      window.removeEventListener("resize", mark);
-      instance?.destroy();
-    };
-  }, []);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -142,14 +51,11 @@ export function GlassDock() {
   return (
     <>
       <nav
-        ref={dockRef}
         aria-label="Site navigation"
         onMouseMove={onMove}
         onMouseLeave={() => setHover(null)}
-        className="lg-fallback fixed top-6 left-1/2 -translate-x-1/2 md:left-6 md:translate-x-0 z-50 flex h-14 items-center gap-0.5 px-2 md:gap-1 md:px-2.5 rounded-full"
+        className="lg-dock fixed top-6 left-1/2 -translate-x-1/2 md:left-6 md:translate-x-0 z-50 flex h-14 items-center gap-0.5 px-2 md:gap-1 md:px-2.5 rounded-full"
       >
-        {/* Links sit above the WebGL canvas the library injects, so they stay
-            crisp and clickable. */}
         <DockLink href="/" label="Home" active={isActive("/")}>
           <svg width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
             <path d="M3 10.5 12 3l9 7.5" />
@@ -200,8 +106,8 @@ export function GlassDock() {
         </DockExternal>
       </nav>
 
-      {/* Vercel-style tooltip (skiper43), portaled outside #lg-root so its
-          animation never triggers a LiquidGlass re-capture. */}
+      {/* Vercel-style tooltip (skiper43), portaled outside the dock so its
+          animation is independent and it never intercepts clicks. */}
       {mounted &&
         createPortal(
           <AnimatePresence>

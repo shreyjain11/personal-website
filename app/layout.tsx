@@ -33,11 +33,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased relative`}>
         <SpeedInsights />
         {/*
-          #lg-root is the LiquidGlass root. Its direct children are, in paint
-          order: the capturable gradient (.lg-bg), the page content, and the
-          glass dock. The dock must be a direct child of this root.
+          Page wrapper: the gradient (.lg-bg), the page content, and the
+          fixed glass dock.
         */}
-        <div id="lg-root" className="relative min-h-screen">
+        <div className="relative min-h-screen">
           <div className="lg-bg" aria-hidden />
           <div className="relative z-10">
             {children}
