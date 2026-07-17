@@ -32,6 +32,8 @@ const accolades: { name: string; url?: string }[] = [
   { name: "Provisional Patent Holder" },
   { name: "Harvard Undergraduate Research Journal — Finalist", url: "https://www.thurj.com/" },
   { name: "USACO Gold Division", url: "https://usaco.org/" },
+  { name: "Discrete Mathematics — Honorable Mention" },
+  { name: "Algebra — Honorable Mention" },
 ];
 
 export default function Work() {
