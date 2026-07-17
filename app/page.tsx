@@ -76,7 +76,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <main className="flex flex-col md:flex-row items-center justify-center flex-1 w-full px-4 max-w-5xl mx-auto gap-10 md:gap-20 pt-28 pb-12 md:py-24">
+      <main className="flex flex-col md:flex-row items-center justify-center flex-1 w-full px-5 max-w-5xl mx-auto gap-10 md:gap-20 pt-32 pb-16 md:py-24">
 
         {/* Profile Image with 3D tilt */}
         <motion.div
@@ -136,7 +136,7 @@ export default function Home() {
 
       {/* GitHub Contributions */}
       <motion.section
-        className="w-full max-w-4xl mx-auto px-8 pb-20 overflow-hidden"
+        className="w-full max-w-4xl mx-auto px-5 sm:px-8 pb-24 sm:pb-20 overflow-hidden"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.25, ease }}

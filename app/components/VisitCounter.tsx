@@ -52,7 +52,7 @@ export function VisitCounter() {
   // Always show the counter, don't wait for loading
   if (!isLoaded) {
     return (
-      <div className="fixed bottom-8 right-8 z-50">
+      <div className="hidden sm:block fixed bottom-8 right-8 z-50">
         <div className="text-xs font-mono text-foreground opacity-60">
           loading...
         </div>
@@ -86,7 +86,7 @@ export function VisitCounter() {
   const currentMessage = messages[messageIndex];
 
   return (
-    <div className="fixed bottom-8 right-8 z-50">
+    <div className="hidden sm:block fixed bottom-8 right-8 z-50 max-w-[280px] text-right">
       <div className="text-xs font-mono text-foreground opacity-60 hover:opacity-100 transition-all duration-300 cursor-default">
         {currentMessage.before && (
           <>

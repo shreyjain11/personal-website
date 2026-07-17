@@ -254,23 +254,25 @@ export function GitHubContributions({ username }: { username: string }) {
           overflow: hidden;
         }
 
+        /* Scroll horizontally when the full year is wider than the viewport
+           (mobile) instead of scaling the cells down or clipping December.
+           On desktop the graph fits, so no scrollbar appears. */
         .calendar-wrapper {
           width: 100%;
-          overflow: hidden !important;
+          overflow-x: auto;
+          overflow-y: hidden;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          padding-bottom: 2px;
         }
 
-        .calendar-wrapper > div,
-        .calendar-wrapper .react-activity-calendar,
-        .calendar-wrapper .react-activity-calendar > div,
-        .calendar-wrapper .react-activity-calendar__calendar {
-          overflow: hidden !important;
-          max-width: 100% !important;
+        .calendar-wrapper::-webkit-scrollbar {
+          display: none;
         }
 
         .calendar-wrapper svg {
           display: block;
-          max-width: 100%;
-          height: auto;
         }
 
         .calendar-wrapper .react-activity-calendar__footer,
