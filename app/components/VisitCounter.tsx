@@ -86,7 +86,7 @@ export function VisitCounter() {
   const currentMessage = messages[messageIndex];
 
   return (
-    <div className="hidden sm:block fixed bottom-8 right-8 z-50 max-w-[280px] text-right">
+    <div className="hidden sm:block fixed bottom-8 right-8 z-50 text-right whitespace-nowrap">
       <div className="text-xs font-mono text-foreground opacity-60 hover:opacity-100 transition-all duration-300 cursor-default">
         {currentMessage.before && (
           <>
