@@ -123,12 +123,8 @@ export default function Home() {
             Shrey Jain
           </h1>
 
-          <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-foreground/45 mb-8">
+          <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-foreground/45">
             AI/ML Researcher
-          </p>
-
-          <p className="text-[15px] text-foreground/60 leading-relaxed">
-            AI/ML Research at the Eric and Wendy Schmidt Center.
           </p>
         </motion.div>
       </main>
