@@ -124,12 +124,11 @@ export default function Home() {
           </h1>
 
           <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-foreground/45 mb-8">
-            Researcher &nbsp;·&nbsp; Engineer &nbsp;·&nbsp; Builder
+            AI/ML Researcher
           </p>
 
           <p className="text-[15px] text-foreground/60 leading-relaxed">
-            Computational biology researcher at the Eric and Wendy Schmidt Center.
-            Building AI products to create meaningful impact.
+            AI/ML Research at the Eric and Wendy Schmidt Center.
           </p>
         </motion.div>
       </main>

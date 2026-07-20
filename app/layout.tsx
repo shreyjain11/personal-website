@@ -20,7 +20,7 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Shrey Jain",
-  description: "Computational biology researcher at the Eric and Wendy Schmidt Center. Building AI products to create meaningful impact.",
+  description: "AI/ML Research at the Eric and Wendy Schmidt Center.",
 };
 
 export default function RootLayout({
