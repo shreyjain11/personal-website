@@ -14,6 +14,11 @@ interface Project {
 
 const projects: Project[] = [
   {
+    name: "Plexus",
+    url: "https://plexus-olive.vercel.app/",
+    description: "Sketch to clean diagram — turns rough hand-drawn sketches into polished, structured diagrams.",
+  },
+  {
     name: "Deck",
     url: "https://github.com/shreyjain11/deck",
     description:
