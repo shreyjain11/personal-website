@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@paper-design/shaders-react": "^0.0.77",
     "@upstash/redis": "^1.35.3",
     "@vercel/speed-insights": "^1.2.0",
     "@ybouane/liquidglass": "^1.0.3",

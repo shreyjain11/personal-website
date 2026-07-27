@@ -2,142 +2,131 @@
 
 import Image from "next/image";
 import { GitHubContributions } from "./components/GitHubContributions";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 
-const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function Home() {
-  const [konamiIdx, setKonamiIdx] = useState(0);
+  const [konamiIndex, setKonamiIndex] = useState(0);
   const [secret, setSecret] = useState(false);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [hovering, setHovering] = useState(false);
+  const reduceMotion = useReducedMotion();
 
-  // Console easter egg
   useEffect(() => {
     console.log(
-      '%c  👋 hey there  ',
-      'background:#1e1b4b;color:#a5b4fc;font-size:16px;font-weight:bold;padding:8px 16px;border-radius:6px;'
+      "%c  👋 hey there  ",
+      "background:#1e1b4b;color:#a5b4fc;font-size:16px;font-weight:bold;padding:8px 16px;border-radius:6px;",
     );
     console.log(
-      '%cyou found something. want to build together?\n→ mailshreyjain@gmail.com',
-      'color:#64748b;font-size:13px;'
+      "%cyou found something. want to build together?\n→ mailshreyjain@gmail.com",
+      "color:#64748b;font-size:13px;",
     );
   }, []);
 
-  // Konami code
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === KONAMI[konamiIdx]) {
-        const next = konamiIdx + 1;
-        if (next === KONAMI.length) {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === KONAMI[konamiIndex]) {
+        const nextIndex = konamiIndex + 1;
+
+        if (nextIndex === KONAMI.length) {
           setSecret(true);
-          setKonamiIdx(0);
-          setTimeout(() => setSecret(false), 4000);
+          setKonamiIndex(0);
         } else {
-          setKonamiIdx(next);
+          setKonamiIndex(nextIndex);
         }
       } else {
-        setKonamiIdx(e.key === KONAMI[0] ? 1 : 0);
+        setKonamiIndex(event.key === KONAMI[0] ? 1 : 0);
       }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [konamiIdx]);
 
-  const onPhotoMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    setTilt({ x: y * 14, y: -x * 14 });
-  };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [konamiIndex]);
+
+  useEffect(() => {
+    if (!secret) return;
+
+    const timeout = window.setTimeout(() => setSecret(false), 4000);
+    return () => window.clearTimeout(timeout);
+  }, [secret]);
 
   return (
-    <div className="min-h-screen flex flex-col text-foreground font-inter">
-
-      {/* Konami easter egg */}
+    <main className="page-shell">
       <AnimatePresence>
-        {secret && (
+        {secret ? (
           <motion.div
-            key="secret"
-            initial={{ opacity: 0, y: 16 }}
+            className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-foreground/10 bg-background/70 px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/60 backdrop-blur-xl"
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.45, ease }}
-            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+            transition={{ duration: reduceMotion ? 0 : 0.4, ease }}
           >
-            <div className="px-6 py-3 rounded-full bg-foreground/5 backdrop-blur-md border border-foreground/10">
-              <p className="text-sm text-foreground/60 tracking-[0.18em] uppercase whitespace-nowrap">
-                ✦ &nbsp; developer mode unlocked
-              </p>
-            </div>
+            ✦ developer mode unlocked
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
 
-      <main className="flex flex-col md:flex-row items-center justify-center flex-1 w-full px-5 max-w-5xl mx-auto gap-10 md:gap-20 pt-32 pb-16 md:py-24">
-
-        {/* Profile Image with 3D tilt */}
-        <motion.div
-          className="shrink-0"
-          style={{ perspective: '800px' }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease }}
-        >
-          <div
-            className="h-40 w-40 md:h-52 md:w-52 rounded-full ring-1 ring-foreground/20 overflow-hidden shadow-lg cursor-default"
-            style={{
-              transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-              transition: hovering
-                ? 'transform 0.08s ease-out'
-                : 'transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            }}
-            onMouseMove={onPhotoMove}
-            onMouseEnter={() => setHovering(true)}
-            onMouseLeave={() => { setTilt({ x: 0, y: 0 }); setHovering(false); }}
-          >
+      <motion.section
+        className="content-haze"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.78, ease }}
+        aria-labelledby="home-title"
+      >
+        <div className="flex items-center gap-5 sm:gap-7">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[1.15rem] border border-foreground/10 shadow-[0_10px_30px_rgba(0,0,0,0.12)] sm:h-24 sm:w-24">
             <Image
               src="/Shrey Headshot.png"
               alt="Shrey Jain"
-              width={208}
-              height={208}
-              className="object-cover w-full h-full"
+              fill
+              sizes="(max-width: 640px) 80px, 96px"
+              className="object-cover"
               priority
             />
           </div>
-        </motion.div>
 
-        {/* Bio and Socials */}
-        <motion.div
-          className="flex flex-col items-center md:items-start justify-center w-full max-w-lg text-center md:text-left"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.12, ease }}
-        >
-          <h1
-            className="text-5xl font-medium text-foreground tracking-tight leading-none"
-            style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif', marginBottom: '18px' }}
+          <div>
+            <p className="page-eyebrow">AI / ML Researcher</p>
+            <h1 id="home-title" className="page-title">Shrey Jain</h1>
+          </div>
+        </div>
+
+        <p className="page-lede">
+          I work at the intersection of machine learning and computational biology at the{" "}
+          <a
+            className="underline decoration-foreground/25 underline-offset-4 transition-colors hover:decoration-foreground/70"
+            href="https://www.ericandwendyschmidtcenter.org/"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Shrey Jain
-          </h1>
+            Eric and Wendy Schmidt Center
+          </a>{" "}
+          at the Broad Institute.
+        </p>
 
-          <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-foreground/45">
-            AI/ML Researcher
-          </p>
-        </motion.div>
-      </main>
-
-      {/* GitHub Contributions */}
-      <motion.section
-        className="w-full max-w-4xl mx-auto px-5 sm:px-8 pb-24 sm:pb-20 overflow-hidden"
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.25, ease }}
-      >
-        <GitHubContributions username="shreyjain11" />
       </motion.section>
-    </div>
+
+      <motion.section
+        className="content-haze mt-20 sm:mt-24"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.78, delay: reduceMotion ? 0 : 0.18, ease }}
+        aria-labelledby="contributions-title"
+      >
+        <div className="mb-7 flex items-end justify-between gap-4 border-b border-foreground/10 pb-4">
+          <h2 id="contributions-title" className="section-heading">GitHub activity</h2>
+          <a
+            className="text-xs text-foreground/45 transition-colors hover:text-foreground"
+            href="https://github.com/shreyjain11"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @shreyjain11 ↗
+          </a>
+        </div>
+        <GitHubContributions username="shreyjain11" hideHeading />
+      </motion.section>
+    </main>
   );
 }

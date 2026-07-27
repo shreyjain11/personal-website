@@ -2,199 +2,152 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "motion/react";
 
-/**
- * Floating glass navigation dock, shown on every page.
- *
- * The pill is a pure-CSS frosted glass (`.lg-dock` in globals.css) — a real
- * `backdrop-filter` blur of the page behind it. We use CSS rather than the
- * WebGL liquid-glass library because CSS renders identically and reliably on
- * every browser/device (the WebGL version was janky on iOS and drew a stray
- * light rim that was impossible to verify headlessly).
- *
- * On hover, a Vercel-style tooltip (recreated from Skiper UI's "skiper43"
- * with `motion`) springs/slides between icons with a clip-path label reveal.
- * It's portaled to <body> and never intercepts pointer events.
- */
-
-const ease = [0.25, 0.46, 0.45, 0.94] as const;
-
-type Hover = { x: number; y: number; label: string };
+const pageLinks = [
+  { href: "/", label: "Home" },
+  { href: "/work", label: "Work" },
+  { href: "/projects", label: "Projects" },
+] as const;
 
 export function GlassDock() {
   const pathname = usePathname();
-  const [hover, setHover] = useState<Hover | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const reduceMotion = useReducedMotion();
+  const [emailVisible, setEmailVisible] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  // Move the shared tooltip to whichever icon the pointer is over. Delegated
-  // via [data-tip] so both internal links and external anchors are covered.
-  const onMove = (e: React.MouseEvent) => {
-    const el = (e.target as HTMLElement).closest<HTMLElement>("[data-tip]");
-    if (!el) return;
-    const label = el.getAttribute("data-tip") ?? "";
-    const r = el.getBoundingClientRect();
-    setHover((h) =>
-      h && h.label === label
-        ? h
-        : { x: r.left + r.width / 2, y: r.bottom + 10, label },
-    );
+  useEffect(() => {
+    setEmailVisible(false);
+    setEmailCopied(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!emailCopied) return;
+
+    const timeout = window.setTimeout(() => setEmailCopied(false), 1600);
+    return () => window.clearTimeout(timeout);
+  }, [emailCopied]);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText("mailshreyjain@gmail.com");
+      setEmailCopied(true);
+    } catch {
+      setEmailCopied(false);
+    }
   };
 
   return (
-    <>
-      <nav
-        aria-label="Site navigation"
-        onMouseMove={onMove}
-        onMouseLeave={() => setHover(null)}
-        className="lg-dock fixed top-6 left-1/2 -translate-x-1/2 md:left-6 md:translate-x-0 z-50 flex h-14 items-center gap-0.5 px-2 md:gap-1 md:px-2.5 rounded-full"
-      >
-        <DockLink href="/" label="Home" active={isActive("/")}>
-          <svg width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-            <path d="M3 10.5 12 3l9 7.5" />
-            <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" />
-          </svg>
-        </DockLink>
+    <nav className="site-nav" aria-label="Primary navigation">
+      <div className="site-nav__inner">
+        <Link className="site-nav__brand" href="/" aria-label="Shrey Jain — home">
+          SJ
+        </Link>
 
-        <DockLink href="/work" label="Work" active={isActive("/work")}>
-          <svg width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-            <rect x="3" y="7" width="18" height="13" rx="2" />
-            <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7" />
-          </svg>
-        </DockLink>
+        <div className="site-nav__pages">
+          {pageLinks.map((link) => (
+            <Link
+              className="site-nav__link"
+              href={link.href}
+              key={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
 
-        <DockLink href="/projects" label="Projects" active={isActive("/projects")}>
-          <svg width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-            <rect x="3" y="4" width="7.5" height="7.5" rx="1.5" />
-            <rect x="13.5" y="4" width="7.5" height="7.5" rx="1.5" />
-            <rect x="3" y="14" width="7.5" height="6" rx="1.5" />
-            <rect x="13.5" y="14" width="7.5" height="6" rx="1.5" />
-          </svg>
-        </DockLink>
+        <div className="site-nav__external">
+          <span className="site-nav__divider" aria-hidden="true" />
+          <ExternalLink href="https://github.com/shreyjain11" label="GitHub">
+            <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.3 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z" />
+            </svg>
+          </ExternalLink>
 
-        <span className="mx-1 h-6 w-px bg-foreground/15" aria-hidden />
+          <button
+            className="site-nav__icon"
+            type="button"
+            aria-label={emailVisible ? "Hide email address" : "Reveal email address"}
+            aria-expanded={emailVisible}
+            aria-controls="email-reveal"
+            onClick={() => setEmailVisible((visible) => !visible)}
+          >
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m3 7 7.9 5.3a2 2 0 0 0 2.2 0L21 7" />
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+            </svg>
+          </button>
 
-        <DockExternal href="https://github.com/shreyjain11" label="GitHub">
-          <svg width="19" height="19" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 0.297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387 0.6 0.113 0.82-0.258 0.82-0.577 0-0.285-0.011-1.04-0.017-2.04-3.338 0.726-4.042-1.61-4.042-1.61-0.546-1.387-1.333-1.756-1.333-1.756-1.089-0.745 0.084-0.729 0.084-0.729 1.205 0.084 1.84 1.236 1.84 1.236 1.07 1.834 2.809 1.304 3.495 0.997 0.108-0.775 0.418-1.305 0.762-1.605-2.665-0.305-5.466-1.334-5.466-5.931 0-1.31 0.469-2.381 1.236-3.221-0.124-0.303-0.535-1.523 0.117-3.176 0 0 1.008-0.322 3.301 1.23 0.957-0.266 1.983-0.399 3.003-0.404 1.02 0.005 2.047 0.138 3.006 0.404 2.291-1.553 3.297-1.23 3.297-1.23 0.653 1.653 0.242 2.873 0.119 3.176 0.77 0.84 1.235 1.911 1.235 3.221 0 4.609-2.803 5.624-5.475 5.921 0.43 0.372 0.823 1.102 0.823 2.222 0 1.606-0.015 2.898-0.015 3.293 0 0.322 0.216 0.694 0.825 0.576 4.765-1.589 8.199-6.084 8.199-11.386 0-6.627-5.373-12-12-12z" />
-          </svg>
-        </DockExternal>
+          <span className="site-nav__optional">
+            <ExternalLink href="https://x.com/jain11shrey" label="X">
+              <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18.2 2.3h3.3l-7.2 8.2 8.5 11.2h-6.7l-4.7-6.2L6 21.7H2.7l7.8-8.8-9.3-10.6h6.9l4.2 5.6 5.9-5.6Zm-1.1 17.5h1.8L7.1 4.1H5.2l11.9 15.7Z" />
+              </svg>
+            </ExternalLink>
+          </span>
 
-        <DockExternal href="https://x.com/jain11shrey" label="Twitter / X">
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-          </svg>
-        </DockExternal>
+          <span className="site-nav__optional">
+            <ExternalLink
+              href="https://scholar.google.com/citations?user=J9MEbCsAAAAJ&hl=en"
+              label="Google Scholar"
+            >
+              <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14Zm0-24L0 9.5l4.8 3.9A8 8 0 0 1 12 10a8 8 0 0 1 7.2 3.4L24 9.5 12 0Z" />
+              </svg>
+            </ExternalLink>
+          </span>
+        </div>
+      </div>
 
-        <DockExternal href="mailto:mailshreyjain@gmail.com" label="Email">
-          <svg width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </DockExternal>
-
-        <DockExternal href="https://scholar.google.com/citations?user=J9MEbCsAAAAJ&hl=en" label="Scholar">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 10a8 8 0 0 1 7.162 3.44L24 9.5z" />
-          </svg>
-        </DockExternal>
-      </nav>
-
-      {/* Vercel-style tooltip (skiper43), portaled outside the dock so its
-          animation is independent and it never intercepts clicks. */}
-      {mounted &&
-        createPortal(
-          <AnimatePresence>
-            {hover && (
-              <motion.div
-                key="lg-tip"
-                className="pointer-events-none fixed left-0 top-0 z-[60]"
-                initial={{ opacity: 0, scale: 0.9, x: hover.x, y: hover.y }}
-                animate={{ opacity: 1, scale: 1, x: hover.x, y: hover.y }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{
-                  x: { type: "spring", stiffness: 560, damping: 34, mass: 0.7 },
-                  y: { type: "spring", stiffness: 560, damping: 34, mass: 0.7 },
-                  opacity: { duration: 0.14 },
-                  scale: { duration: 0.18, ease: [0.34, 1.56, 0.64, 1] },
-                }}
-              >
-                {/* plain wrapper handles horizontal centering so it never
-                    fights motion's transform on the layers above/below */}
-                <div className="-translate-x-1/2">
-                  <motion.div layout className="lg-tooltip">
-                    <AnimatePresence mode="popLayout" initial={false}>
-                      <motion.span
-                        key={hover.label}
-                        className="block whitespace-nowrap"
-                        initial={{ clipPath: "inset(0 0 100% 0)", opacity: 0, filter: "blur(3px)" }}
-                        animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1, filter: "blur(0px)" }}
-                        exit={{ clipPath: "inset(100% 0 0 0)", opacity: 0, filter: "blur(3px)" }}
-                        transition={{ duration: 0.2, ease }}
-                      >
-                        {hover.label}
-                      </motion.span>
-                    </AnimatePresence>
-                  </motion.div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>,
-          document.body,
-        )}
-    </>
+      <AnimatePresence>
+        {emailVisible ? (
+          <motion.div
+            id="email-reveal"
+            className="email-reveal"
+            initial={{ opacity: 0, y: -8, scale: 0.96, filter: "blur(5px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -5, scale: 0.97, filter: "blur(4px)" }}
+            transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.23, 1, 0.32, 1] }}
+            aria-live="polite"
+          >
+            <span className="email-reveal__address">mailshreyjain@gmail.com</span>
+            <button
+              className="email-reveal__copy"
+              type="button"
+              onClick={copyEmail}
+              aria-label="Copy email address"
+            >
+              {emailCopied ? "Copied" : "Copy"}
+            </button>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </nav>
   );
 }
 
-function DockLink({
+function ExternalLink({
+  children,
   href,
   label,
-  active,
-  children,
 }: {
+  children: React.ReactNode;
   href: string;
   label: string;
-  active: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      data-tip={label}
-      aria-label={label}
-      aria-current={active ? "page" : undefined}
-      className={`relative z-[1] flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full transition-colors duration-200 ${
-        active ? "text-foreground" : "text-foreground/55 hover:text-foreground"
-      }`}
-    >
-      {children}
-    </Link>
-  );
-}
-
-function DockExternal({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children: React.ReactNode;
 }) {
   return (
     <a
+      className="site-nav__icon"
       href={href}
-      data-tip={label}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="relative z-[1] flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full text-foreground/55 hover:text-foreground transition-colors duration-200"
+      title={label}
     >
       {children}
     </a>

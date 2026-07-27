@@ -28,7 +28,13 @@ const DARK_THEME = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"] as co
 // Warm grey empty cell to match cream background; earthy greens for harmony
 const LIGHT_THEME = ["#d8d3cb", "#b7ddb0", "#74c476", "#31a354", "#006d2c"] as const;
 
-export function GitHubContributions({ username }: { username: string }) {
+export function GitHubContributions({
+  username,
+  hideHeading = false,
+}: {
+  username: string;
+  hideHeading?: boolean;
+}) {
   const [mounted, setMounted] = useState(false);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const [isOpen, setIsOpen] = useState(false);
@@ -135,7 +141,7 @@ export function GitHubContributions({ username }: { username: string }) {
   if (!mounted) {
     return (
       <div className="w-full max-w-4xl">
-        <h3 className="text-2xl font-medium text-foreground mb-8">GitHub Contributions</h3>
+        {!hideHeading ? <h3 className="mb-8 text-2xl font-medium text-foreground">GitHub Contributions</h3> : null}
         <div className="h-32 flex items-center justify-center">
           <div className="text-foreground/60 text-sm">Loading contributions...</div>
         </div>
@@ -145,13 +151,18 @@ export function GitHubContributions({ username }: { username: string }) {
 
   return (
     <div className="contribution-root">
-      <h3 className="text-2xl font-medium text-foreground" style={{ marginBottom: '28px' }}>GitHub Contributions</h3>
+      {!hideHeading ? (
+        <h3 className="mb-7 text-2xl font-medium text-foreground">GitHub Contributions</h3>
+      ) : null}
 
       <div className="flex items-center justify-between mb-6">
         <div className="relative">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center gap-3 bg-foreground/[0.04] border border-foreground/15 text-foreground/80 px-4 py-2 rounded-lg text-sm cursor-pointer hover:bg-foreground/[0.07] hover:text-foreground transition-all duration-200 focus:outline-none min-w-[120px] justify-between"
+            className="flex min-w-[120px] cursor-pointer items-center justify-between gap-3 rounded-lg border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-sm text-foreground/80 transition-all duration-200 hover:bg-foreground/[0.07] hover:text-foreground"
+            aria-expanded={isOpen}
+            aria-haspopup="listbox"
+            aria-label="Select contribution year"
           >
             <span>{selectedYear}</span>
             <svg
@@ -171,11 +182,13 @@ export function GitHubContributions({ username }: { username: string }) {
                 className="fixed inset-0 z-40"
                 onClick={() => setIsOpen(false)}
               />
-              <div className="absolute left-0 mt-2 w-[140px] bg-background backdrop-blur-md border border-foreground/10 rounded-lg shadow-xl z-50 overflow-hidden">
+              <div className="absolute left-0 z-50 mt-2 w-[140px] overflow-hidden rounded-lg border border-foreground/10 bg-background shadow-xl backdrop-blur-md" role="listbox" aria-label="Contribution year">
                 {years.map((year) => (
                   <button
                     key={year}
                     onClick={() => { setSelectedYear(year); setIsOpen(false); }}
+                    role="option"
+                    aria-selected={selectedYear === year}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                       selectedYear === year
                         ? "bg-foreground/10 text-foreground"
@@ -247,96 +260,6 @@ export function GitHubContributions({ username }: { username: string }) {
         </div>
       )}
 
-      <style jsx global>{`
-        .contribution-root {
-          width: 100%;
-          max-width: 100%;
-          overflow: hidden;
-        }
-
-        /* Scroll horizontally when the full year is wider than the viewport
-           (mobile) instead of scaling the cells down or clipping December.
-           On desktop the graph fits, so no scrollbar appears. */
-        .calendar-wrapper {
-          width: 100%;
-          overflow-x: auto;
-          overflow-y: hidden;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-          padding-bottom: 2px;
-        }
-
-        .calendar-wrapper::-webkit-scrollbar {
-          display: none;
-        }
-
-        .calendar-wrapper svg {
-          display: block;
-        }
-
-        .calendar-wrapper .react-activity-calendar__footer,
-        .calendar-wrapper .react-activity-calendar__count,
-        .calendar-wrapper .react-activity-calendar__legend {
-          display: none !important;
-        }
-
-        .calendar-wrapper text {
-          fill: var(--foreground) !important;
-          opacity: 0.45;
-        }
-
-        .calendar-wrapper rect {
-          rx: 2px;
-          ry: 2px;
-          cursor: pointer;
-          transition: all 0.15s ease;
-        }
-
-        .calendar-wrapper rect:hover {
-          stroke: var(--foreground);
-          stroke-opacity: 0.5;
-          stroke-width: 2px;
-        }
-
-        .legend-row {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          margin-top: 12px;
-          margin-left: 29px;
-        }
-
-        .legend-boxes {
-          display: flex;
-          gap: 3px;
-        }
-
-        .legend-boxes span {
-          width: 11px;
-          height: 11px;
-          border-radius: 2px;
-          display: block;
-        }
-
-        .tooltip-container {
-          position: fixed;
-          z-index: 9999;
-          pointer-events: none;
-          transform: translate(-50%, -100%);
-        }
-
-        .tooltip-content {
-          background: var(--background);
-          border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
-          color: var(--foreground);
-          padding: 8px 12px;
-          border-radius: 6px;
-          font-size: 12px;
-          white-space: nowrap;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-      `}</style>
     </div>
   );
 }

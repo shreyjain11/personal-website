@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 
 export const metadata: Metadata = {
   title: "Projects — Shrey Jain",
@@ -46,17 +45,17 @@ const projects: Project[] = [
 
 export default function Projects() {
   return (
-    <div className="min-h-screen text-foreground font-inter px-5 pt-28 pb-24">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-12 lg-rise">
-          <AppBreadcrumb />
-        </div>
-
-        <header className="mb-10 lg-rise" style={{ animationDelay: "0.05s" }}>
-          <h1 className="text-4xl md:text-5xl tracking-tight leading-none">Projects</h1>
+    <main className="page-shell">
+      <div>
+        <header className="content-haze mb-16 lg-rise">
+          <p className="page-eyebrow">Selected work</p>
+          <h1 className="page-title">Projects</h1>
+          <p className="page-lede">
+            Tools and experiments spanning AI research, security, interfaces, and developer workflows.
+          </p>
         </header>
 
-        <ol className="border-b border-foreground/10">
+        <ol className="content-haze border-b border-foreground/10">
           {projects.map((project, i) => (
             <li
               key={project.name}
@@ -67,17 +66,17 @@ export default function Projects() {
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group grid grid-cols-[1.75rem_1fr_auto] items-baseline gap-x-4 border-t border-foreground/10 py-6 sm:gap-x-6 sm:py-7"
+                className="group grid grid-cols-[1.75rem_1fr_auto] items-baseline gap-x-4 border-t border-foreground/10 py-7 sm:gap-x-7 sm:py-8"
               >
-                <span className="font-mono text-xs tabular-nums text-foreground/30 transition-colors duration-300 group-hover:text-foreground/60">
+                <span className="text-xs tabular-nums text-foreground/30 transition-colors duration-300 group-hover:text-foreground/60">
                   {String(i + 1).padStart(2, "0")}
                 </span>
 
                 <div className="min-w-0">
-                  <h2 className="text-xl tracking-tight text-foreground/90 transition-colors duration-200 group-hover:text-foreground">
+                  <h2 className="text-[1.35rem] font-medium tracking-[-0.025em] text-foreground/90 transition-colors duration-200 group-hover:text-foreground">
                     {project.name}
                   </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground/50">
+                  <p className="mt-2.5 max-w-xl text-sm leading-[1.7] text-foreground/55">
                     {project.description}
                   </p>
                 </div>
@@ -100,6 +99,6 @@ export default function Projects() {
           ))}
         </ol>
       </div>
-    </div>
+    </main>
   );
 }

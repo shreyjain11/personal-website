@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { VisitCounter } from "./components/VisitCounter";
 import { GlassDock } from "./components/GlassDock";
+import { DitherBackground } from "./components/DitherBackground";
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["400", "500", "700"],
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-manrope",
 });
 
 export const metadata: Metadata = {
@@ -30,20 +24,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased relative`}>
+      <body className={`${manrope.variable} font-sans antialiased relative`}>
         <SpeedInsights />
-        {/*
-          Page wrapper: the gradient (.lg-bg), the page content, and the
-          fixed glass dock.
-        */}
-        <div className="relative min-h-screen">
-          <div className="lg-bg" aria-hidden />
-          <div className="relative z-10">
+        <div className="site-root">
+          <DitherBackground />
+          <div className="site-content">
             {children}
           </div>
           <GlassDock />
         </div>
-        <div className="grain" aria-hidden />
         <VisitCounter />
       </body>
     </html>
