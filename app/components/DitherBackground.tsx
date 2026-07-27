@@ -62,7 +62,11 @@ export function DitherBackground() {
   const colorFront = preferences.isDark ? "#75839d" : "#49566e";
 
   return (
-    <div className="dither-backdrop" aria-hidden="true">
+    <div
+      className="dither-backdrop"
+      data-webgl={preferences.canUseWebGl ? "true" : "false"}
+      aria-hidden="true"
+    >
       <div className="dither-fallback" />
       {preferences.canUseWebGl ? (
         <Dithering
@@ -79,7 +83,7 @@ export function DitherBackground() {
           scale={0.92}
           shape="simplex"
           size={1.65}
-          speed={preferences.reduceMotion ? 0 : 0.46}
+          speed={preferences.reduceMotion ? 0 : 0.12}
           type="4x4"
           width="100%"
         />
