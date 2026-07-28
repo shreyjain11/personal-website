@@ -24,12 +24,6 @@ const projects: Project[] = [
       "Control your Claude Code sessions from your phone — live status cards, a per-session chat view, a real terminal, and push notifications with approve/deny, all served over Tailscale.",
   },
   {
-    name: "PromptScan",
-    url: "https://prompt-injection-scanner.vercel.app",
-    description:
-      "Security tool that analyzes GitHub repositories for prompt injection vulnerabilities and attack hotspots.",
-  },
-  {
     name: "PaperPal",
     url: "https://github.com/shreyjain11/PaperPal",
     description:
@@ -39,7 +33,7 @@ const projects: Project[] = [
     name: "Veritas",
     url: "https://veritas-viewer.vercel.app/",
     description:
-      "Model-agnostic auditor that quantifies how much of an ML model's benchmark score comes from data leakage, then recomputes an honest score — without ever running the model.",
+      "Checks whether frontier models are benchmark maxxing by stress-testing reported scores for robustness, protocol dependence, exposure-consistent signals, and uncertainty.",
   },
 ];
 
