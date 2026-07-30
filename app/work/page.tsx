@@ -15,8 +15,8 @@ interface WorkExperience {
 
 const workExperiences: WorkExperience[] = [
   {
-    company: "Eric and Wendy Schmidt Center",
-    url: "https://www.ericandwendyschmidtcenter.org/",
+    company: "Sabeti Lab",
+    url: "https://www.sabetilab.org/",
     title: "Researcher",
     date: "Jan 2026 — Present",
     description: "Computational biology research at the Broad Institute.",

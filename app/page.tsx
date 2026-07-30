@@ -96,11 +96,11 @@ export default function Home() {
           I work at the intersection of machine learning and computational biology at the{" "}
           <a
             className="underline decoration-foreground/25 underline-offset-4 transition-colors hover:decoration-foreground/70"
-            href="https://www.ericandwendyschmidtcenter.org/"
+            href="https://www.sabetilab.org/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Eric and Wendy Schmidt Center
+            Sabeti Lab
           </a>{" "}
           at the Broad Institute.
         </p>

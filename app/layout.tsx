@@ -14,7 +14,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "Shrey Jain",
-  description: "AI/ML Research at the Eric and Wendy Schmidt Center.",
+  description: "AI/ML research at Sabeti Lab at the Broad Institute.",
 };
 
 export default function RootLayout({
