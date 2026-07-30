@@ -122,7 +122,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            @shreyjain11 ↗
+            @shreyjain11
           </a>
         </div>
         <GitHubContributions username="shreyjain11" hideHeading />
