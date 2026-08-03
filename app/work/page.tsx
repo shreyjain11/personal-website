@@ -19,7 +19,7 @@ const workExperiences: WorkExperience[] = [
     url: "https://www.sabetilab.org/",
     title: "Researcher",
     date: "Jan 2026 — Present",
-    description: "Computational biology research at the Broad Institute.",
+    description: "Machine learning research at the Broad Institute.",
   },
   {
     company: "Zitnik Lab",
