@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import { VisitCounter } from "./components/VisitCounter";
 import { GlassDock } from "./components/GlassDock";
 import { DitherBackground } from "./components/DitherBackground";
 
@@ -33,7 +32,6 @@ export default function RootLayout({
           </div>
           <GlassDock />
         </div>
-        <VisitCounter />
       </body>
     </html>
   );
