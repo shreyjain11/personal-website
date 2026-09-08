@@ -148,9 +148,38 @@ p {
 /* Shared editorial page structure. */
 .page-shell {
   width: min(100%, 45rem);
-  min-height: 100svh;
+  min-height: calc(100svh - 9rem);
   margin-inline: auto;
   padding: clamp(8.5rem, 16vw, 11rem) 1.25rem 7rem;
+}
+
+.site-footer {
+  width: min(100%, 45rem);
+  margin-inline: auto;
+  padding: 0 1.25rem 3rem;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.3rem;
+}
+
+.contact-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.site-footer p {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.6;
 }
 
 .content-haze {
@@ -203,6 +232,80 @@ p {
   font-weight: 650;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+/* Text entries share one rhythm across projects and research. */
+.collection-header {
+  margin-bottom: clamp(2.5rem, 6vw, 3.5rem);
+}
+
+.entry-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 1.5rem;
+  padding: 1.5rem 1rem;
+  margin-inline: -1rem;
+  border-radius: 0.75rem;
+  transition: background-color 180ms ease;
+}
+
+.entry-link:hover,
+.entry-link:focus-visible {
+  background: color-mix(in srgb, var(--foreground) 4%, transparent);
+}
+
+.entry-title {
+  color: var(--foreground);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+}
+
+.entry-description {
+  max-width: 34rem;
+  margin-top: 0.6rem;
+  color: color-mix(in srgb, var(--foreground) 72%, var(--background));
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.entry-role,
+.entry-date {
+  color: color-mix(in srgb, var(--foreground) 65%, var(--background));
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.entry-role { margin-top: 0.35rem; }
+.entry-date { font-variant-numeric: tabular-nums; }
+
+.entry-arrow {
+  color: var(--muted);
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.entry-link:hover .entry-arrow,
+.entry-link:focus-visible .entry-arrow {
+  color: var(--foreground);
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 560px) {
+  .entry-link--work {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.75rem;
+  }
 }
 
 /* Compact, legible glass navigation. */
@@ -444,5 +547,14 @@ p {
   .dither-canvas,
   .lg-rise {
     animation-duration: 0.01ms !important;
+  }
+
+  .entry-link,
+  .entry-arrow {
+    transition: none;
+  }
+
+  .entry-link .entry-arrow {
+    transform: none;
   }
 }

@@ -34,7 +34,7 @@ export default function Work() {
   return (
     <main className="page-shell">
       <div>
-        <header className="content-haze mb-16 lg-rise">
+        <header className="content-haze collection-header lg-rise">
           <p className="page-eyebrow">Research</p>
           <h1 className="page-title">Work</h1>
           <p className="page-lede">
@@ -42,9 +42,8 @@ export default function Work() {
           </p>
         </header>
 
-        <section className="content-haze" aria-labelledby="experience-title">
-          <h2 id="experience-title" className="section-heading mb-5">Experience</h2>
-          <ol className="border-b border-foreground/10">
+        <section className="content-haze" aria-label="Research experience">
+          <ol className="entry-list">
           {workExperiences.map((work, i) => (
             <li
               key={work.company}
@@ -55,20 +54,20 @@ export default function Work() {
                 href={work.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group grid grid-cols-1 gap-3 border-t border-foreground/10 py-7 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-x-7 sm:py-8"
+                className="group entry-link entry-link--work"
               >
                 <div className="min-w-0">
-                  <h3 className="text-[1.35rem] font-medium tracking-[-0.025em] text-foreground/90 transition-colors duration-200 group-hover:text-foreground">
+                  <h2 className="entry-title">
                     {work.company}
-                  </h3>
-                  <p className="mt-1 text-sm text-foreground/60">{work.title}</p>
+                  </h2>
+                  <p className="entry-role">{work.title}</p>
                   {work.description && (
-                    <p className="mt-2 text-sm leading-relaxed text-foreground/50">
+                    <p className="entry-description">
                       {work.description}
                     </p>
                   )}
                 </div>
-                <span className="shrink-0 text-xs tabular-nums text-foreground/40">
+                <span className="entry-date">
                   {work.date}
                 </span>
               </a>

@@ -81,7 +81,8 @@ function emptyDays(weeks: number): Contribution[] {
   const today = new Date();
   return Array.from({ length: weeks * 7 }, (_, index) => {
     const date = new Date(today);
-    date.setDate(date.getDate() - (weeks * 7 - 1 - index));
+    // Keep arithmetic in UTC to match the ISO date key across DST changes.
+    date.setUTCDate(date.getUTCDate() - (weeks * 7 - 1 - index));
     return {
       date: date.toISOString().slice(0, 10),
       count: 0,

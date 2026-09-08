@@ -29,6 +29,12 @@ export default function RootLayout({
           <DitherBackground />
           <div className="site-content">
             {children}
+            <footer className="site-footer">
+              <a className="contact-link" href="mailto:mailshreyjain@gmail.com">
+                Get in touch <span aria-hidden="true">↗</span>
+              </a>
+              <p>mailshreyjain@gmail.com</p>
+            </footer>
           </div>
           <GlassDock />
         </div>
