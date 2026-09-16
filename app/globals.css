@@ -409,10 +409,15 @@ p {
   background: var(--line);
 }
 
+.email-popover {
+  position: relative;
+  display: inline-flex;
+}
+
 .email-reveal {
   position: absolute;
   top: calc(100% + 0.65rem);
-  right: 0.35rem;
+  left: 50%;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -425,7 +430,20 @@ p {
   font-size: 0.76rem;
   backdrop-filter: blur(22px) saturate(145%);
   -webkit-backdrop-filter: blur(22px) saturate(145%);
-  transform-origin: top right;
+  transform-origin: top center;
+  translate: -50% 0;
+}
+
+.email-reveal::before {
+  position: absolute;
+  bottom: calc(100% - 1px);
+  left: 50%;
+  width: 1rem;
+  height: 0.75rem;
+  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  content: "";
+  translate: -50% 0;
 }
 
 .email-reveal__address {
@@ -510,9 +528,13 @@ p {
   }
 
   .email-reveal {
-    right: 0;
+    left: auto;
+    right: -4.5rem;
     max-width: calc(100vw - 1.5rem);
+    translate: 0 0;
   }
+
+  .email-reveal::before { left: calc(100% - 5.8rem); }
 
   .dither-backdrop {
     --dither-opacity: 0.3;

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const pageLinks = [
   { href: "/", label: "Home" },
@@ -16,6 +16,7 @@ export function GlassDock() {
   const reduceMotion = useReducedMotion();
   const [emailVisible, setEmailVisible] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
+  const emailCloseTimer = useRef<number | null>(null);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -24,6 +25,27 @@ export function GlassDock() {
     setEmailVisible(false);
     setEmailCopied(false);
   }, [pathname]);
+
+  const cancelEmailClose = useCallback(() => {
+    if (!emailCloseTimer.current) return;
+    window.clearTimeout(emailCloseTimer.current);
+    emailCloseTimer.current = null;
+  }, []);
+
+  const showEmail = useCallback(() => {
+    cancelEmailClose();
+    setEmailVisible(true);
+  }, [cancelEmailClose]);
+
+  const scheduleEmailClose = useCallback(() => {
+    cancelEmailClose();
+    emailCloseTimer.current = window.setTimeout(() => {
+      setEmailVisible(false);
+      emailCloseTimer.current = null;
+    }, 140);
+  }, [cancelEmailClose]);
+
+  useEffect(() => () => cancelEmailClose(), [cancelEmailClose]);
 
   useEffect(() => {
     if (!emailCopied) return;
@@ -69,19 +91,64 @@ export function GlassDock() {
             </svg>
           </ExternalLink>
 
-          <button
-            className="site-nav__icon"
-            type="button"
-            aria-label={emailVisible ? "Hide email address" : "Reveal email address"}
-            aria-expanded={emailVisible}
-            aria-controls="email-reveal"
-            onClick={() => setEmailVisible((visible) => !visible)}
+          <div
+            className="email-popover"
+            onPointerEnter={(event) => {
+              if (event.pointerType === "mouse") showEmail();
+            }}
+            onPointerLeave={(event) => {
+              if (event.pointerType === "mouse") scheduleEmailClose();
+            }}
           >
-            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m3 7 7.9 5.3a2 2 0 0 0 2.2 0L21 7" />
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-            </svg>
-          </button>
+            <button
+              className="site-nav__icon"
+              type="button"
+              aria-label={emailVisible ? "Hide email address" : "Reveal email address"}
+              aria-expanded={emailVisible}
+              aria-controls="email-reveal"
+              onFocus={showEmail}
+              onBlur={(event) => {
+                if (!event.currentTarget.parentElement?.contains(event.relatedTarget)) {
+                  scheduleEmailClose();
+                }
+              }}
+              onClick={() => {
+                cancelEmailClose();
+                setEmailVisible((visible) => !visible);
+              }}
+            >
+              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m3 7 7.9 5.3a2 2 0 0 0 2.2 0L21 7" />
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+              </svg>
+            </button>
+
+            <AnimatePresence>
+              {emailVisible ? (
+                <motion.div
+                  id="email-reveal"
+                  className="email-reveal"
+                  initial={{ opacity: 0, y: -6, scale: 0.88, filter: "blur(6px)" }}
+                  animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -4, scale: 0.92, filter: "blur(4px)" }}
+                  transition={reduceMotion ? { duration: 0 } : { type: "spring", visualDuration: 0.3, bounce: 0.15 }}
+                  aria-live="polite"
+                >
+                  <span className="email-reveal__address">mailshreyjain@gmail.com</span>
+                  <button
+                    className="email-reveal__copy"
+                    type="button"
+                    onClick={copyEmail}
+                    onFocus={showEmail}
+                    onBlur={scheduleEmailClose}
+                    aria-label="Copy email address"
+                  >
+                    {emailCopied ? "Copied" : "Copy"}
+                  </button>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>
 
           <span className="site-nav__optional">
             <ExternalLink href="https://x.com/jain11shrey" label="X">
@@ -104,29 +171,6 @@ export function GlassDock() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {emailVisible ? (
-          <motion.div
-            id="email-reveal"
-            className="email-reveal"
-            initial={{ opacity: 0, y: -8, scale: 0.96, filter: "blur(5px)" }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -5, scale: 0.97, filter: "blur(4px)" }}
-            transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.23, 1, 0.32, 1] }}
-            aria-live="polite"
-          >
-            <span className="email-reveal__address">mailshreyjain@gmail.com</span>
-            <button
-              className="email-reveal__copy"
-              type="button"
-              onClick={copyEmail}
-              aria-label="Copy email address"
-            >
-              {emailCopied ? "Copied" : "Copy"}
-            </button>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
     </nav>
   );
 }

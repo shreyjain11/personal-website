@@ -93,7 +93,7 @@ export default function Home() {
         </div>
 
         <p className="page-lede">
-          I work at the intersection of machine learning and computational biology at the{" "}
+          I work on automating scientific research across wet and dry labs at the{" "}
           <a
             className="underline decoration-foreground/25 underline-offset-4 transition-colors hover:decoration-foreground/70"
             href="https://www.sabetilab.org/"
