@@ -227,6 +227,23 @@ p {
   line-height: 1.7;
 }
 
+/* Inline links inside body copy. Native underlines so the rule follows the
+   text when a name wraps across lines. */
+.prose-link {
+  color: color-mix(in srgb, var(--foreground) 88%, transparent);
+  font-weight: 560;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--foreground) 26%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.28em;
+  transition: color 220ms ease, text-decoration-color 220ms ease;
+}
+
+.prose-link:hover {
+  color: var(--foreground);
+  text-decoration-color: color-mix(in srgb, var(--foreground) 70%, transparent);
+}
+
 .section-heading {
   font-size: 0.72rem;
   font-weight: 650;

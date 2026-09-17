@@ -95,14 +95,23 @@ export default function Home() {
         <p className="page-lede">
           I work on automating scientific research across wet and dry labs at the{" "}
           <a
-            className="underline decoration-foreground/25 underline-offset-4 transition-colors hover:decoration-foreground/70"
+            className="prose-link"
             href="https://www.sabetilab.org/"
             target="_blank"
             rel="noopener noreferrer"
           >
             Sabeti Lab
           </a>{" "}
-          at the Broad Institute.
+          at the{" "}
+          <a
+            className="prose-link"
+            href="https://www.broadinstitute.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Broad Institute
+          </a>
+          .
         </p>
 
       </motion.section>
