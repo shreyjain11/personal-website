@@ -93,7 +93,7 @@ export default function Home() {
         </div>
 
         <p className="page-lede">
-          I work on automating scientific research across wet and dry labs at the{" "}
+          I work on automating scientific research across both wet and dry labs in the{" "}
           <a
             className="prose-link"
             href="https://www.sabetilab.org/"
