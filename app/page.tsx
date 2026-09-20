@@ -86,10 +86,7 @@ export default function Home() {
             />
           </div>
 
-          <div>
-            <p className="page-eyebrow">AI / ML Researcher</p>
-            <h1 id="home-title" className="page-title">Shrey Jain</h1>
-          </div>
+          <h1 id="home-title" className="page-title">Shrey Jain</h1>
         </div>
 
         <p className="page-lede">
