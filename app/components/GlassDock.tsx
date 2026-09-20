@@ -56,7 +56,7 @@ export function GlassDock() {
 
   const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText("mailshreyjain@gmail.com");
+      await navigator.clipboard.writeText("jainshre@broadinstitute.org");
       setEmailCopied(true);
     } catch {
       setEmailCopied(false);
@@ -134,7 +134,7 @@ export function GlassDock() {
                   transition={reduceMotion ? { duration: 0 } : { type: "spring", visualDuration: 0.3, bounce: 0.15 }}
                   aria-live="polite"
                 >
-                  <span className="email-reveal__address">mailshreyjain@gmail.com</span>
+                  <span className="email-reveal__address">jainshre@broadinstitute.org</span>
                   <button
                     className="email-reveal__copy"
                     type="button"

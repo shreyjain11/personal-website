@@ -30,10 +30,12 @@ export default function RootLayout({
           <div className="site-content">
             {children}
             <footer className="site-footer">
-              <a className="contact-link" href="mailto:mailshreyjain@gmail.com">
-                Get in touch <span aria-hidden="true">↗</span>
-              </a>
-              <p>mailshreyjain@gmail.com</p>
+              <p className="footer-note">
+                reach out at{" "}
+                <a className="footer-address" href="mailto:jainshre@broadinstitute.org">
+                  jainshre at broadinstitute dot org
+                </a>
+              </p>
             </footer>
           </div>
           <GlassDock />

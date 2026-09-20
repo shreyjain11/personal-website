@@ -19,7 +19,7 @@ export default function Home() {
       "background:#1e1b4b;color:#a5b4fc;font-size:16px;font-weight:bold;padding:8px 16px;border-radius:6px;",
     );
     console.log(
-      "%cyou found something. want to build together?\n→ mailshreyjain@gmail.com",
+      "%cyou found something. want to build together?\n→ jainshre@broadinstitute.org",
       "color:#64748b;font-size:13px;",
     );
   }, []);

@@ -159,27 +159,27 @@ p {
   padding: 0 1.25rem 3rem;
 }
 
-.contact-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 2.75rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-color: var(--line);
-  text-underline-offset: 0.3rem;
-}
-
-.contact-link:hover {
-  text-decoration-color: currentColor;
-}
-
-.site-footer p {
-  margin-top: 0.25rem;
+/* Single spelled-out line under a hairline rule. The address reads as plain
+   prose ("jainshre at broadinstitute dot org") but is still a real mailto. */
+.footer-note {
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   line-height: 1.6;
+}
+
+.footer-address {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.28em;
+  transition: color 220ms ease, text-decoration-color 220ms ease;
+}
+
+.footer-address:hover {
+  color: var(--foreground);
+  text-decoration-color: color-mix(in srgb, var(--foreground) 45%, transparent);
 }
 
 .content-haze {
