@@ -16,7 +16,7 @@ const projects: Project[] = [
     name: "Veritas",
     url: "https://veritas-viewer.vercel.app/",
     description:
-      "Tells you whether your favorite models are genuinely capable or just LARPing their benchmark scores.",
+      "Tells you whether your favorite models are genuinely capable or just larping their benchmark scores.",
   },
   {
     name: "Plexus",
