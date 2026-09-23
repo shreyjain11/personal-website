@@ -16,7 +16,7 @@ const projects: Project[] = [
     name: "Veritas",
     url: "https://veritas-viewer.vercel.app/",
     description:
-      "Stress-tests AI benchmark scores to understand how reliably they reflect model capabilities.",
+      "Tells you whether your favorite models are genuinely capable or just LARPing their benchmark scores.",
   },
   {
     name: "Plexus",
