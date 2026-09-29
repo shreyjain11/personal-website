@@ -14,13 +14,13 @@ interface Project {
 const projects: Project[] = [
   {
     name: "Veritas",
-    url: "https://veritas-viewer.vercel.app/",
+    url: "https://veritas.jainshrey.com/",
     description:
       "Tells you whether your favorite models are genuinely capable or just larping their benchmark scores.",
   },
   {
     name: "Plexus",
-    url: "https://plexus-olive.vercel.app/",
+    url: "https://plexus.jainshrey.com/",
     description:
       "Turns rough, hand-drawn sketches into clean, structured diagrams.",
   },
