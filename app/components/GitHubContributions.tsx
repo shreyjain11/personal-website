@@ -219,14 +219,17 @@ function ContributionGrid({
       aria-label={label}
       className="relative min-h-[113px]"
     >
+      {/* Month labels are derived from dates, so they're left blank while
+          loading: the prerendered placeholder is built from the build-time
+          date and would otherwise mismatch the client during hydration. */}
       <motion.div
         className="flex justify-center"
         style={{ gap, marginBottom: gap }}
-        initial={reduceMotion ? false : { opacity: 0, filter: "blur(5px)" }}
-        animate={{ opacity: loading ? 0.35 : 1, filter: "blur(0px)" }}
+        initial={reduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: reduceMotion ? 0 : 0.42, delay: loading ? 0 : sweepEnd }}
       >
-        {toMonthLabels(visible).map((month, index) => (
+        {(loading ? visible.map(() => null) : toMonthLabels(visible)).map((month, index) => (
           <div
             key={`${month ?? "blank"}-${index}`}
             className="relative h-3 shrink-0"
@@ -246,28 +249,35 @@ function ContributionGrid({
         style={{ gap }}
         onPointerLeave={() => setHovered(undefined)}
       >
+        {/* Animate whole week columns (opacity only) rather than every cell.
+            Hundreds of individually transformed layers inside the card's
+            rounded, clipped box fail to paint on iOS Safari. */}
         {visible.map((week, weekIndex) => (
-          <div key={week[0]?.date ?? weekIndex} className="flex flex-col" style={{ gap }}>
+          <motion.div
+            key={week[0]?.date ?? weekIndex}
+            className="flex flex-col"
+            style={{ gap }}
+            initial={reduceMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              ...CELL_FADE,
+              delay: reduceMotion || loading ? 0 : weekIndex * COLUMN_STAGGER,
+            }}
+          >
             {week.map((day) => (
-              <motion.div
+              <div
                 key={day.date}
                 onPointerEnter={hover(day)}
                 className="shrink-0 rounded-[3px] bg-foreground/[0.09]"
                 style={{ width: CELL_SIZE, height: CELL_SIZE }}
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.45 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  ...CELL_FADE,
-                  delay: reduceMotion || loading ? 0 : weekIndex * COLUMN_STAGGER,
-                }}
               >
                 <div
                   className="h-full w-full rounded-[3px]"
                   style={loading ? { opacity: 0 } : scale[day.level]}
                 />
-              </motion.div>
+              </div>
             ))}
-          </div>
+          </motion.div>
         ))}
       </div>
 
@@ -338,7 +348,7 @@ export function GitHubContributions({
       ) : null}
 
       <div
-        className="relative w-full overflow-hidden rounded-[28px] border border-foreground/10 bg-background/75 px-4 pb-5 pt-5 shadow-[0_18px_60px_rgba(0,0,0,0.06)] backdrop-blur-xl sm:px-5 sm:pb-6 sm:pt-6"
+        className="relative w-full overflow-hidden rounded-[28px] border border-foreground/10 bg-background/90 px-4 pb-5 pt-5 shadow-[0_18px_60px_rgba(0,0,0,0.06)] sm:px-5 sm:pb-6 sm:pt-6"
         aria-busy={status === "loading"}
       >
         <p className="px-1 pb-6 text-sm font-medium leading-none text-foreground/75 sm:pb-7 sm:text-base">
