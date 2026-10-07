@@ -80,9 +80,8 @@ export default function Home() {
               src="/shrey-headshot.png"
               alt="Shrey Jain"
               fill
-              sizes="(max-width: 640px) 88px, 106px"
-              quality={100}
-              className="object-cover object-bottom scale-110"
+              unoptimized
+              className="object-cover object-bottom scale-[1.35]"
               priority
             />
           </div>
