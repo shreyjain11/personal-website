@@ -77,11 +77,12 @@ export default function Home() {
         <div className="flex items-center gap-5 sm:gap-7">
           <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[1.15rem] border border-foreground/10 shadow-[0_10px_30px_rgba(0,0,0,0.12)] sm:h-24 sm:w-24">
             <Image
-              src="/Shrey Headshot.png"
+              src="/shrey-headshot.png"
               alt="Shrey Jain"
               fill
-              sizes="(max-width: 640px) 80px, 96px"
-              className="object-cover"
+              sizes="(max-width: 640px) 88px, 106px"
+              quality={100}
+              className="object-cover object-bottom scale-110"
               priority
             />
           </div>
