@@ -27,6 +27,7 @@ export default function RootLayout({
         <SpeedInsights />
         <div className="site-root">
           <DitherBackground />
+          <GlassDock />
           <div className="site-content">
             {children}
             <footer className="site-footer">
@@ -38,7 +39,6 @@ export default function RootLayout({
               </p>
             </footer>
           </div>
-          <GlassDock />
         </div>
       </body>
     </html>

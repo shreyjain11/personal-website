@@ -325,13 +325,13 @@ p {
   }
 }
 
-/* Compact, legible glass navigation. */
+/* Text-first navigation aligned with the page content. */
 .site-nav {
-  position: fixed;
+  position: absolute;
   z-index: 50;
-  top: max(1rem, env(safe-area-inset-top));
+  top: max(1.25rem, env(safe-area-inset-top));
   left: 50%;
-  width: min(calc(100% - 1.5rem), 44rem);
+  width: min(calc(100% - 2.5rem), 42.5rem);
   transform: translateX(-50%);
 }
 
@@ -339,154 +339,77 @@ p {
   display: flex;
   min-height: 3.25rem;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.35rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 13%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--surface-strong) 88%, transparent);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(22px) saturate(145%);
-  -webkit-backdrop-filter: blur(22px) saturate(145%);
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.site-nav__brand,
+.site-nav__link {
+  position: relative;
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 160ms ease;
 }
 
 .site-nav__brand {
-  display: grid;
-  width: 2.55rem;
-  height: 2.55rem;
-  flex: none;
-  place-items: center;
-  border-radius: 999px;
-  font-size: 0.93rem;
-  font-weight: 750;
-  letter-spacing: -0.06em;
+  flex-shrink: 0;
+  color: var(--foreground);
+  font-weight: 650;
+  letter-spacing: -0.025em;
 }
 
 .site-nav__pages {
   display: flex;
-  min-width: 0;
   align-items: center;
-  gap: 0.15rem;
-}
-
-.site-nav__link,
-.site-nav__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  color: color-mix(in srgb, var(--foreground) 56%, transparent);
-  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+  gap: 1.75rem;
 }
 
 .site-nav__link {
-  min-height: 2.55rem;
-  padding-inline: 0.82rem;
-  font-size: 0.76rem;
-  font-weight: 560;
-}
-
-.site-nav__icon {
-  width: 2.55rem;
-  height: 2.55rem;
-  flex: none;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  font: inherit;
-  cursor: pointer;
+  color: color-mix(in srgb, var(--foreground) 70%, var(--background));
+  font-weight: 500;
 }
 
 .site-nav__link:hover,
-.site-nav__icon:hover {
-  color: var(--foreground);
-  background: color-mix(in srgb, var(--foreground) 6%, transparent);
-}
-
 .site-nav__link[aria-current="page"] {
   color: var(--foreground);
-  background: color-mix(in srgb, var(--foreground) 8%, transparent);
 }
 
-.site-nav__icon:active,
-.site-nav__link:active {
-  transform: scale(0.96);
-}
-
-.site-nav__external {
-  display: flex;
-  margin-left: auto;
-  align-items: center;
-  gap: 0.05rem;
-}
-
-.site-nav__divider {
-  width: 1px;
-  height: 1.4rem;
-  margin-inline: 0.2rem;
-  background: var(--line);
-}
-
-.email-popover {
-  position: relative;
-  display: inline-flex;
-}
-
-.email-reveal {
+.site-nav [aria-current="page"]::after {
   position: absolute;
-  top: calc(100% + 0.65rem);
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.4rem 0.45rem 0.4rem 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 13%, transparent);
-  border-radius: 999px;
-  color: var(--foreground);
-  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12);
-  font-size: 0.76rem;
-  backdrop-filter: blur(22px) saturate(145%);
-  -webkit-backdrop-filter: blur(22px) saturate(145%);
-  transform-origin: top center;
-  translate: -50% 0;
-}
-
-.email-reveal::before {
-  position: absolute;
-  bottom: calc(100% - 1px);
-  left: 50%;
-  width: 1rem;
-  height: 0.75rem;
-  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  right: 0;
+  bottom: 0.4rem;
+  left: 0;
+  height: 1px;
+  background: currentColor;
   content: "";
-  translate: -50% 0;
 }
 
-.email-reveal__address {
-  user-select: all;
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin-top: 1rem;
 }
 
-.email-reveal__copy {
-  min-height: 2rem;
-  padding-inline: 0.75rem;
-  border: 0;
-  border-radius: 999px;
-  color: var(--background);
-  background: var(--foreground);
-  font: inherit;
-  font-size: 0.69rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 180ms ease, transform 180ms ease;
+.profile-links a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.3rem;
+  color: color-mix(in srgb, var(--foreground) 65%, var(--background));
+  font-size: 0.8125rem;
+  transition: color 160ms ease;
 }
 
-.email-reveal__copy:hover {
-  opacity: 0.82;
-}
-
-.email-reveal__copy:active {
-  transform: scale(0.96);
+.profile-links a:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 /* Page and row entrance motion. */
@@ -506,52 +429,13 @@ p {
 }
 
 @media (max-width: 560px) {
-  .site-nav {
-    width: min(calc(100% - 1rem), 44rem);
-  }
-
-  .site-nav__inner {
-    gap: 0;
-    padding: 0.3rem;
-  }
-
-  .site-nav__brand {
-    width: 2rem;
-    height: 2.35rem;
-    font-size: 0.82rem;
-  }
-
-  .site-nav__link {
-    min-height: 2.35rem;
-    padding-inline: 0.42rem;
-    font-size: 0.69rem;
-  }
-
-  .site-nav__icon {
-    width: 2.05rem;
-    height: 2.35rem;
-  }
-
-  .site-nav__divider {
-    margin-inline: 0.08rem;
-  }
-
-  .site-nav__optional {
-    display: contents;
+  .site-nav__pages {
+    gap: 1.25rem;
   }
 
   .content-haze::before {
     inset-inline: -1.5rem;
   }
-
-  .email-reveal {
-    left: auto;
-    right: -4.5rem;
-    max-width: calc(100vw - 1.5rem);
-    translate: 0 0;
-  }
-
-  .email-reveal::before { left: calc(100% - 5.8rem); }
 
   .dither-backdrop {
     --dither-opacity: 0.3;
@@ -562,17 +446,16 @@ p {
   }
 }
 
-@media (max-width: 370px) {
-  .site-nav__brand {
-    display: none;
+@media (max-width: 380px) {
+  .site-nav__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
   }
 
-  .site-nav__link {
-    padding-inline: 0.35rem;
-  }
-
-  .site-nav__icon {
-    width: 1.95rem;
+  .site-nav__pages {
+    width: 100%;
+    gap: 1.5rem;
   }
 }
 

@@ -111,6 +111,17 @@ export default function Home() {
           .
         </p>
 
+        <nav className="profile-links" aria-label="Social profiles">
+          <a href="https://github.com/shreyjain11" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+          <a href="https://x.com/jain11shrey" target="_blank" rel="noopener noreferrer">
+            X
+          </a>
+          <a href="https://scholar.google.com/citations?user=J9MEbCsAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">
+            Scholar
+          </a>
+        </nav>
       </motion.section>
 
       <motion.section

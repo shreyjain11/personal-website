@@ -75,14 +75,14 @@ export function DitherBackground() {
           colorFront={colorFront}
           fit="none"
           height="100%"
-          maxPixelCount={800_000}
+          maxPixelCount={8_000_000}
           minPixelRatio={1}
           offsetX={0.14}
           offsetY={-0.24}
           rotation={-10}
           scale={0.92}
           shape="simplex"
-          size={1.65}
+          size={2}
           speed={preferences.reduceMotion ? 0 : 0.12}
           type="4x4"
           width="100%"
