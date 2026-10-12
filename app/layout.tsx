@@ -33,7 +33,7 @@ export default function RootLayout({
             <footer className="site-footer">
               <p className="footer-note">
                 reach out at{" "}
-                <a className="footer-address" href="mailto:jainshre@broadinstitute.org">
+                <a className="footer-address link-draw" href="mailto:jainshre@broadinstitute.org">
                   jainshre at broadinstitute dot org
                 </a>
               </p>

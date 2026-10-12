@@ -134,7 +134,7 @@ export default function Home() {
         <div className="mb-7 flex items-end justify-between gap-4 border-b border-foreground/10 pb-4">
           <h2 id="contributions-title" className="section-heading">GitHub activity</h2>
           <a
-            className="text-xs text-foreground/45 transition-colors hover:text-foreground"
+            className="link-draw text-xs text-foreground/45 hover:text-foreground"
             href="https://github.com/shreyjain11"
             target="_blank"
             rel="noopener noreferrer"

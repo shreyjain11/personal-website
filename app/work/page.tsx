@@ -58,7 +58,7 @@ export default function Work() {
               >
                 <div className="min-w-0">
                   <h2 className="entry-title">
-                    {work.company}
+                    <span className="link-draw">{work.company}</span>
                   </h2>
                   <p className="entry-role">{work.title}</p>
                   {work.description && (

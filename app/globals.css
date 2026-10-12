@@ -169,17 +169,38 @@ p {
   line-height: 1.6;
 }
 
-.footer-address {
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.28em;
-  transition: color 220ms ease, text-decoration-color 220ms ease;
-}
-
 .footer-address:hover {
   color: var(--foreground);
-  text-decoration-color: color-mix(in srgb, var(--foreground) 45%, transparent);
+}
+
+/*
+ * Site-wide hover underline: a 1px line that draws in from the left and exits
+ * to the right. Inline text that can wrap uses a background "stroke" (the
+ * line follows each wrapped line in order); single-line flex items use a
+ * transformed ::after, which animates on the compositor.
+ */
+:root {
+  --draw-duration: 450ms;
+  --draw-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 100% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  padding-bottom: 0.1em;
+  transition:
+    background-size var(--draw-duration) var(--draw-ease),
+    color 220ms ease;
+}
+
+a.link-draw:hover,
+a.link-draw:focus-visible,
+.entry-link:hover .link-draw,
+.entry-link:focus-visible .link-draw {
+  background-position: 0 100%;
+  background-size: 100% 1px;
 }
 
 .content-haze {
@@ -227,21 +248,31 @@ p {
   line-height: 1.7;
 }
 
-/* Inline links inside body copy. Native underlines so the rule follows the
-   text when a name wraps across lines. */
+/* Inline links inside body copy keep a faint resting underline so they read
+   as links; on hover the full-strength line draws over it. */
 .prose-link {
   color: color-mix(in srgb, var(--foreground) 88%, transparent);
   font-weight: 560;
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--foreground) 26%, transparent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.28em;
-  transition: color 220ms ease, text-decoration-color 220ms ease;
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(
+      color-mix(in srgb, var(--foreground) 26%, transparent),
+      color-mix(in srgb, var(--foreground) 26%, transparent)
+    );
+  background-position: 100% 100%, 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px, 100% 1px;
+  padding-bottom: 0.1em;
+  transition:
+    background-size var(--draw-duration) var(--draw-ease),
+    color 220ms ease;
 }
 
-.prose-link:hover {
+.prose-link:hover,
+.prose-link:focus-visible {
   color: var(--foreground);
-  text-decoration-color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  background-position: 0 100%, 0 100%;
+  background-size: 100% 1px, 100% 1px;
 }
 
 .section-heading {
@@ -269,15 +300,11 @@ p {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
   column-gap: 1.5rem;
-  padding: 1.5rem 1rem;
-  margin-inline: -1rem;
-  border-radius: 0.75rem;
-  transition: background-color 180ms ease;
+  padding-block: 1.5rem;
 }
 
-.entry-link:hover,
 .entry-link:focus-visible {
-  background: color-mix(in srgb, var(--foreground) 4%, transparent);
+  outline: none;
 }
 
 .entry-title {
@@ -379,7 +406,9 @@ p {
   color: var(--foreground);
 }
 
-.site-nav [aria-current="page"]::after {
+.site-nav__brand::after,
+.site-nav__link::after,
+.profile-links a::after {
   position: absolute;
   right: 0;
   bottom: 0.4rem;
@@ -387,6 +416,20 @@ p {
   height: 1px;
   background: currentColor;
   content: "";
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--draw-duration) var(--draw-ease);
+}
+
+.site-nav__brand:hover::after,
+.site-nav__link:hover::after,
+.profile-links a:hover::after,
+.site-nav__brand:focus-visible::after,
+.site-nav__link:focus-visible::after,
+.profile-links a:focus-visible::after,
+.site-nav [aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left center;
 }
 
 .profile-links {
@@ -397,6 +440,7 @@ p {
 }
 
 .profile-links a {
+  position: relative;
   display: inline-flex;
   min-height: 2.75rem;
   align-items: center;
@@ -408,8 +452,10 @@ p {
 
 .profile-links a:hover {
   color: var(--foreground);
-  text-decoration: underline;
-  text-underline-offset: 4px;
+}
+
+.profile-links a::after {
+  bottom: 0.55rem;
 }
 
 /* Page and row entrance motion. */
@@ -472,7 +518,12 @@ p {
   }
 
   .entry-link,
-  .entry-arrow {
+  .entry-arrow,
+  .link-draw,
+  .prose-link,
+  .site-nav__brand::after,
+  .site-nav__link::after,
+  .profile-links a::after {
     transition: none;
   }
 

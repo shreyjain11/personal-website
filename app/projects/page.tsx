@@ -59,7 +59,7 @@ export default function Projects() {
               >
                 <div className="min-w-0">
                   <h2 className="entry-title">
-                    {project.name}
+                    <span className="link-draw">{project.name}</span>
                   </h2>
                   <p className="entry-description">
                     {project.description}
