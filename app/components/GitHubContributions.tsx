@@ -307,22 +307,31 @@ export function GitHubContributions({
     const controller = new AbortController();
     setStatus("loading");
 
-    fetch(`/api/github-activity?username=${encodeURIComponent(username)}`, {
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Unable to load GitHub activity");
-        return (await response.json()) as ActivityResponse;
-      })
-      .then((data) => {
-        setActivity(data);
-        setStatus("ready");
-      })
-      .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
-        setStatus("error");
-      });
+    // Retry with backoff before giving up: the upstream source occasionally
+    // rate limits, and a second try a moment later usually succeeds.
+    const load = async () => {
+      for (const delay of [0, 2000, 5000]) {
+        if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
+        if (controller.signal.aborted) return;
+        try {
+          const response = await fetch(
+            `/api/github-activity?username=${encodeURIComponent(username)}`,
+            { signal: controller.signal },
+          );
+          if (!response.ok) continue;
+          const data = (await response.json()) as ActivityResponse;
+          if (!data.contributions?.length) continue;
+          setActivity(data);
+          setStatus("ready");
+          return;
+        } catch (error: unknown) {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+        }
+      }
+      if (!controller.signal.aborted) setStatus("error");
+    };
 
+    load();
     return () => controller.abort();
   }, [username]);
 
