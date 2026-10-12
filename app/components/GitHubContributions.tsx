@@ -372,7 +372,7 @@ export function GitHubContributions({
                 href={`https://github.com/${username}`}
                 target="_blank"
                 rel="noreferrer"
-                className="prose-link"
+                className="underline decoration-foreground/25 underline-offset-4 hover:decoration-foreground/70"
               >
                 @{username} on GitHub
               </a>
