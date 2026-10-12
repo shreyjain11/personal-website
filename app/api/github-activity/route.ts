@@ -17,7 +17,66 @@ const lastGood = new Map<string, Contribution[]>();
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Primary source. It's a shared free service with a strict per-IP rate limit
+const LEVELS: Record<string, number> = {
+  NONE: 0,
+  FIRST_QUARTILE: 1,
+  SECOND_QUARTILE: 2,
+  THIRD_QUARTILE: 3,
+  FOURTH_QUARTILE: 4,
+};
+
+// Preferred source when a GITHUB_TOKEN env var is set: GitHub's official
+// GraphQL API, authenticated with its own 5,000 requests/hour budget.
+async function fromGitHubApi(username: string): Promise<Contribution[]> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return [];
+
+  const response = await fetch("https://api.github.com/graphql", {
+    method: "POST",
+    headers: { Authorization: `bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: `query ($login: String!) {
+        user(login: $login) {
+          contributionsCollection {
+            contributionCalendar {
+              weeks { contributionDays { date contributionCount contributionLevel } }
+            }
+          }
+        }
+      }`,
+      variables: { login: username },
+    }),
+    next: { revalidate: 3600 },
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
+
+  if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);
+
+  const payload = (await response.json()) as {
+    data?: {
+      user?: {
+        contributionsCollection: {
+          contributionCalendar: {
+            weeks: {
+              contributionDays: { date: string; contributionCount: number; contributionLevel: string }[];
+            }[];
+          };
+        };
+      } | null;
+    };
+  };
+
+  const weeks = payload.data?.user?.contributionsCollection.contributionCalendar.weeks ?? [];
+  return weeks.flatMap((week) =>
+    week.contributionDays.map((day) => ({
+      date: day.date,
+      count: day.contributionCount,
+      level: LEVELS[day.contributionLevel] ?? 0,
+    })),
+  );
+}
+
+// Fallback source. It's a shared free service with a strict per-IP rate limit
 // (10 requests / 10s), and Vercel's outbound IPs are shared with many other
 // sites, so 429s happen. Retry once after the window has had time to drain.
 async function fromContributionsApi(username: string): Promise<Contribution[]> {
@@ -42,7 +101,7 @@ async function fromContributionsApi(username: string): Promise<Contribution[]> {
   throw new Error("Contribution service unavailable");
 }
 
-// Fallback: read the same data straight from GitHub's contribution calendar,
+// Last resort: read the same data straight from GitHub's contribution calendar,
 // which renders one <td data-date data-level> per day plus a <tool-tip>
 // ("3 contributions on …" / "No contributions on …") holding the count.
 async function fromGitHub(username: string): Promise<Contribution[]> {
@@ -84,7 +143,7 @@ function normalize(days: Contribution[]): Contribution[] {
 }
 
 async function fetchContributions(username: string) {
-  for (const source of [fromContributionsApi, fromGitHub]) {
+  for (const source of [fromGitHubApi, fromContributionsApi, fromGitHub]) {
     try {
       const contributions = normalize(await source(username));
       if (contributions.length) return contributions;
