@@ -33,6 +33,9 @@
 html {
   max-width: 100vw;
   background: var(--background);
+  /* Always reserve the scrollbar's space so pages short enough not to scroll
+     (e.g. Work) don't shift sideways relative to pages that do. */
+  scrollbar-gutter: stable;
 }
 
 body {
