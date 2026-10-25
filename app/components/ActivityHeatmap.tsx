@@ -261,7 +261,7 @@ export function ActivityHeatmap({
           ))}
 
           {/* crosshair bands (hours mode) */}
-          {hours && (
+          {hours && active ? (
             <>
               <motion.rect
                 x={LW - 2}
@@ -270,7 +270,7 @@ export function ActivityHeatmap({
                 rx={5}
                 className="fill-black/[0.035] dark:fill-white/[0.04]"
                 initial={false}
-                animate={{ y: gy(active?.r ?? 0) - 2, opacity: active ? 1 : 0 }}
+                animate={{ y: gy(active.r) - 2 }}
                 transition={reduce ? { duration: 0 } : { duration: 0.15 }}
               />
               <motion.rect
@@ -280,11 +280,11 @@ export function ActivityHeatmap({
                 rx={5}
                 className="fill-black/[0.035] dark:fill-white/[0.04]"
                 initial={false}
-                animate={{ x: gx(active?.c ?? 0) - 2, opacity: active ? 1 : 0 }}
+                animate={{ x: gx(active.c) - 2 }}
                 transition={reduce ? { duration: 0 } : { duration: 0.15 }}
               />
             </>
-          )}
+          ) : null}
 
           {model.cells.map((x) => {
             const l = model.level(x.v);
@@ -302,18 +302,20 @@ export function ActivityHeatmap({
             );
           })}
 
-          {/* active ring */}
-          <motion.rect
-            width={cwEff + 2}
-            height={ch + 2}
-            rx={Math.min(4, cwEff / 3)}
-            fill="none"
-            strokeWidth={1.5}
-            className="stroke-foreground"
-            initial={false}
-            animate={{ x: gx(active?.c ?? 0) - 1, y: gy(active?.r ?? 0) - 1, opacity: active ? 1 : 0 }}
-            transition={reduce ? { duration: 0 } : { x: { duration: 0.12 }, y: { duration: 0.12 }, opacity: { duration: 0.12 } }}
-          />
+          {/* Remove the ring on dismissal; never animate it back to cell (0, 0). */}
+          {active ? (
+            <motion.rect
+              width={cwEff + 2}
+              height={ch + 2}
+              rx={Math.min(4, cwEff / 3)}
+              fill="none"
+              strokeWidth={1.5}
+              className="stroke-foreground"
+              initial={false}
+              animate={{ x: gx(active.c) - 1, y: gy(active.r) - 1 }}
+              transition={reduce ? { duration: 0 } : { x: { duration: 0.12 }, y: { duration: 0.12 } }}
+            />
+          ) : null}
 
           <rect
             x={LW}
