@@ -1,294 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { createPortal } from "react-dom";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-} from "motion/react";
-
-type ContributionLevel = 0 | 1 | 2 | 3 | 4;
-
-type Contribution = {
-  date: string;
-  count: number;
-  level: ContributionLevel;
-};
+import { ActivityHeatmap } from "./ActivityHeatmap";
+import type { HourlyActivity } from "../lib/github-hours";
 
 type ActivityResponse = {
-  contributions: Contribution[];
+  contributions: { date: string; count: number; level: number }[];
 };
 
 type LoadState = "loading" | "ready" | "error";
-type HoveredDay = { day: Contribution; x: number; y: number };
-type LevelStyle = { backgroundColor: string; opacity: number };
-
-const CELL_SIZE = 11;
-const MONTHS = 12;
-const WEEKS_PER_MONTH = 365.25 / 12 / 7;
-const LEVELS = [0, 1, 2, 3, 4] as const;
-const LEVEL_OPACITY: Record<ContributionLevel, number> = {
-  0: 0,
-  1: 0.3,
-  2: 0.52,
-  3: 0.76,
-  4: 1,
-};
-const MONTH_NAMES = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
-const CELL_FADE = { duration: 0.2, ease: EASE_OUT } as const;
-const TOOLTIP_FADE = { duration: 0.14, ease: EASE_OUT } as const;
-const COLUMN_STAGGER = 0.01;
-
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
-
-const DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-});
-
-function weeksFor(months: number) {
-  return Math.max(1, Math.ceil(months * WEEKS_PER_MONTH));
-}
-
-function gapFor(cellSize: number) {
-  return Math.max(2, Math.round(cellSize / 4));
-}
-
-function describeDay({ count, date }: Contribution) {
-  const noun = count === 1 ? "contribution" : "contributions";
-  return `${count} ${noun} on ${DATE_FORMAT.format(new Date(`${date}T12:00:00`))}`;
-}
-
-function emptyDays(weeks: number): Contribution[] {
-  const today = new Date();
-  return Array.from({ length: weeks * 7 }, (_, index) => {
-    const date = new Date(today);
-    // Keep arithmetic in UTC to match the ISO date key across DST changes.
-    date.setUTCDate(date.getUTCDate() - (weeks * 7 - 1 - index));
-    return {
-      date: date.toISOString().slice(0, 10),
-      count: 0,
-      level: 0,
-    };
-  });
-}
-
-function toWeeks(contributions: Contribution[]) {
-  const weeks: Contribution[][] = [];
-  for (let index = 0; index < contributions.length; index += 7) {
-    weeks.push(contributions.slice(index, index + 7));
-  }
-  return weeks;
-}
-
-function toMonthLabels(weeks: Contribution[][]) {
-  const labels: (string | null)[] = weeks.map(() => null);
-  const monthAt = (index: number) => weeks[index]?.[0]?.date.slice(5, 7);
-
-  let start = 0;
-  for (let index = 1; index <= weeks.length; index += 1) {
-    if (index < weeks.length && monthAt(index) === monthAt(start)) continue;
-    if (index - start >= 3) {
-      labels[start] = MONTH_NAMES[Number(monthAt(start)) - 1] ?? null;
-    }
-    start = index;
-  }
-
-  return labels;
-}
-
-function useFittedColumns(cellSize: number, gap: number) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [columns, setColumns] = React.useState<number>();
-
-  useIsoLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    const measure = () => {
-      setColumns(
-        Math.max(1, Math.floor((element.clientWidth + gap) / (cellSize + gap))),
-      );
-    };
-
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [cellSize, gap]);
-
-  return [ref, columns] as const;
-}
-
-function Tooltip({
-  hovered,
-  reduceMotion,
-}: {
-  hovered: HoveredDay;
-  reduceMotion: boolean | null;
-}) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [left, setLeft] = React.useState(hovered.x);
-
-  useIsoLayoutEffect(() => {
-    const half = (ref.current?.offsetWidth ?? 0) / 2;
-    const edge = 8 + half;
-    setLeft(Math.min(Math.max(hovered.x, edge), window.innerWidth - edge));
-  }, [hovered]);
-
-  return createPortal(
-    <div
-      className="pointer-events-none fixed z-50"
-      style={{
-        left,
-        top: hovered.y,
-        transform: "translate(-50%, calc(-100% - 8px))",
-      }}
-    >
-      <motion.div
-        ref={ref}
-        className="whitespace-nowrap rounded-lg bg-foreground px-2.5 py-1.5 text-[11px] font-medium text-background shadow-lg"
-        initial={reduceMotion ? false : { opacity: 0, scale: 0.94 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94 }}
-        transition={reduceMotion ? { duration: 0 } : TOOLTIP_FADE}
-      >
-        {describeDay(hovered.day)}
-      </motion.div>
-    </div>,
-    document.body,
-  );
-}
-
-function ContributionGrid({
-  contributions,
-  label,
-  loading,
-  reduceMotion,
-}: {
-  contributions: Contribution[];
-  label: string;
-  loading: boolean;
-  reduceMotion: boolean | null;
-}) {
-  const weeks = React.useMemo(() => toWeeks(contributions), [contributions]);
-  const gap = gapFor(CELL_SIZE);
-  const [ref, columns] = useFittedColumns(CELL_SIZE, gap);
-  const [hovered, setHovered] = React.useState<HoveredDay>();
-  const scale = React.useMemo<LevelStyle[]>(
-    () =>
-      LEVELS.map((level) => ({
-        backgroundColor: "#39d353",
-        opacity: LEVEL_OPACITY[level],
-      })),
-    [],
-  );
-
-  const cap = Math.min(weeks.length, weeksFor(MONTHS));
-  const visible = weeks.slice(-Math.min(cap, columns ?? cap));
-  const sweepEnd = (visible.length - 1) * COLUMN_STAGGER + CELL_FADE.duration;
-
-  const hover = (day: Contribution) => (event: React.PointerEvent) => {
-    if (loading) return;
-    const cell = event.currentTarget.getBoundingClientRect();
-    setHovered({ day, x: cell.left + cell.width / 2, y: cell.top });
-  };
-
-  return (
-    <div
-      ref={ref}
-      role="img"
-      aria-label={label}
-      className="relative min-h-[113px]"
-    >
-      {/* Month labels are derived from dates, so they're left blank while
-          loading: the prerendered placeholder is built from the build-time
-          date and would otherwise mismatch the client during hydration. */}
-      <motion.div
-        className="flex justify-center"
-        style={{ gap, marginBottom: gap }}
-        initial={reduceMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: reduceMotion ? 0 : 0.42, delay: loading ? 0 : sweepEnd }}
-      >
-        {(loading ? visible.map(() => null) : toMonthLabels(visible)).map((month, index) => (
-          <div
-            key={`${month ?? "blank"}-${index}`}
-            className="relative h-3 shrink-0"
-            style={{ width: CELL_SIZE }}
-          >
-            {month ? (
-              <span className="absolute left-0 top-0 text-[10px] leading-none text-foreground/40">
-                {month}
-              </span>
-            ) : null}
-          </div>
-        ))}
-      </motion.div>
-
-      <div
-        className="flex justify-center overflow-hidden"
-        style={{ gap }}
-        onPointerLeave={() => setHovered(undefined)}
-      >
-        {/* Animate whole week columns (opacity only) rather than every cell.
-            Hundreds of individually transformed layers inside the card's
-            rounded, clipped box fail to paint on iOS Safari. */}
-        {visible.map((week, weekIndex) => (
-          <motion.div
-            key={week[0]?.date ?? weekIndex}
-            className="flex flex-col"
-            style={{ gap }}
-            initial={reduceMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              ...CELL_FADE,
-              delay: reduceMotion || loading ? 0 : weekIndex * COLUMN_STAGGER,
-            }}
-          >
-            {week.map((day) => (
-              <div
-                key={day.date}
-                onPointerEnter={hover(day)}
-                className="shrink-0 rounded-[3px] bg-foreground/[0.09]"
-                style={{ width: CELL_SIZE, height: CELL_SIZE }}
-              >
-                <div
-                  className="h-full w-full rounded-[3px]"
-                  style={loading ? { opacity: 0 } : scale[day.level]}
-                />
-              </div>
-            ))}
-          </motion.div>
-        ))}
-      </div>
-
-      <AnimatePresence>
-        {hovered ? (
-          <Tooltip hovered={hovered} reduceMotion={reduceMotion} />
-        ) : null}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 export function GitHubContributions({
   username,
@@ -297,8 +17,12 @@ export function GitHubContributions({
   username: string;
   hideHeading?: boolean;
 }) {
-  const reduceMotion = useReducedMotion();
   const [status, setStatus] = React.useState<LoadState>("loading");
+  const [mode, setMode] = React.useState<"calendar" | "hours">("calendar");
+  const [hoursStatus, setHoursStatus] = React.useState<LoadState>("loading");
+  const [hourly, setHourly] = React.useState<HourlyActivity | null>(null);
+  const [hoursAttempt, setHoursAttempt] = React.useState(0);
+  const tabId = React.useId();
   const [activity, setActivity] = React.useState<ActivityResponse>({
     contributions: [],
   });
@@ -316,10 +40,15 @@ export function GitHubContributions({
         try {
           const response = await fetch(
             `/api/github-activity?username=${encodeURIComponent(username)}`,
-            { signal: controller.signal },
+            {
+              signal: controller.signal,
+              // The API handles caching; don't reuse an older browser-cached calendar.
+              cache: "no-store",
+            },
           );
           if (!response.ok) continue;
           const data = (await response.json()) as ActivityResponse;
+          if (controller.signal.aborted) return;
           if (!data.contributions?.length) continue;
           setActivity(data);
           setStatus("ready");
@@ -335,20 +64,35 @@ export function GitHubContributions({
     return () => controller.abort();
   }, [username]);
 
-  const placeholder = React.useMemo(() => emptyDays(weeksFor(MONTHS)), []);
-  const contributions = activity.contributions.length
-    ? activity.contributions
-    : placeholder;
-  const total = React.useMemo(
-    () => activity.contributions.reduce((sum, day) => sum + day.count, 0),
+  React.useEffect(() => {
+    if (mode !== "hours") return;
+    const controller = new AbortController();
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    const params = new URLSearchParams({ username, timeZone });
+    setHoursStatus("loading");
+    fetch(`/api/github-hours?${params}`, {
+      signal: controller.signal,
+      cache: "no-store",
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Unable to load hourly GitHub activity");
+        return (await response.json()) as HourlyActivity;
+      })
+      .then((data) => {
+        if (controller.signal.aborted) return;
+        setHourly(data);
+        setHoursStatus("ready");
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setHoursStatus("error");
+      });
+    return () => controller.abort();
+  }, [mode, username, hoursAttempt]);
+
+  const heatmapData = React.useMemo(
+    () => activity.contributions.map(({ date, count }) => ({ date, value: count })),
     [activity.contributions],
   );
-  const heading =
-    status === "loading"
-      ? "Loading GitHub activity"
-      : status === "error"
-        ? "GitHub activity unavailable"
-        : `${total.toLocaleString()} contributions in the past year`;
 
   return (
     <div className="w-full">
@@ -358,13 +102,67 @@ export function GitHubContributions({
 
       <div
         className="relative w-full overflow-hidden rounded-[28px] border border-foreground/10 bg-background/90 px-4 pb-5 pt-5 shadow-[0_18px_60px_rgba(0,0,0,0.06)] sm:px-5 sm:pb-6 sm:pt-6"
-        aria-busy={status === "loading"}
       >
-        <p className="px-1 pb-6 text-sm font-medium leading-none text-foreground/75 sm:pb-7 sm:text-base">
-          {heading}
-        </p>
-
-        {status === "error" ? (
+        <div role="tablist" aria-label="GitHub activity view" className="mb-5 flex w-fit gap-0.5 rounded-full bg-foreground/5 p-0.5">
+          {(["calendar", "hours"] as const).map((view) => (
+            <button
+              key={view}
+              id={`${tabId}-${view}`}
+              type="button"
+              role="tab"
+              aria-selected={mode === view}
+              aria-controls={`${tabId}-panel`}
+              tabIndex={mode === view ? 0 : -1}
+              onClick={() => setMode(view)}
+              onKeyDown={(event) => {
+                if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                event.preventDefault();
+                const next = event.key === "Home" ? "calendar" : event.key === "End" ? "hours" : view === "calendar" ? "hours" : "calendar";
+                setMode(next);
+                document.getElementById(`${tabId}-${next}`)?.focus();
+              }}
+              className={`min-h-10 rounded-full px-4 text-xs font-medium transition-colors ${mode === view ? "bg-background text-foreground shadow-sm" : "text-foreground/55 hover:text-foreground"}`}
+            >
+              {view === "calendar" ? "Calendar" : "By hour"}
+            </button>
+          ))}
+        </div>
+        <div
+          id={`${tabId}-panel`}
+          role="tabpanel"
+          aria-labelledby={`${tabId}-${mode}`}
+          aria-busy={(mode === "calendar" ? status : hoursStatus) === "loading"}
+        >
+        {mode === "hours" ? (
+          hoursStatus === "error" ? (
+            <div className="min-h-[160px] py-5 text-sm text-foreground/65" role="status">
+              <p>Hourly activity couldn’t be loaded. Your calendar is still available.</p>
+              <button type="button" className="mt-3 min-h-10 underline underline-offset-4" onClick={() => setHoursAttempt((attempt) => attempt + 1)}>
+                Try again
+              </button>
+            </div>
+          ) : hoursStatus === "loading" || !hourly ? (
+            <div className="min-h-[160px] text-[13px] text-foreground/75" role="status">
+              Loading hourly activity
+            </div>
+          ) : (
+            <>
+              <ActivityHeatmap
+                key="hours"
+                mode="hours"
+                matrix={hourly.matrix}
+                color="#6d7cff"
+                unit="public events"
+                summary={hourly.limited
+                  ? `${hourly.total.toLocaleString()} recent public events`
+                  : `${hourly.total.toLocaleString()} public events in the last ${hourly.windowDays} days`}
+              />
+              {hourly.limited ? (
+                <p className="mt-3 text-[11px] text-foreground/55">Latest 300 public events only</p>
+              ) : null}
+            </>
+          )
+        ) : status === "error" ? (
           <div className="flex min-h-[96px] items-center justify-center px-4 text-center">
             <p className="max-w-sm text-sm leading-6 text-foreground/55">
               Activity could not be loaded right now. Visit{" "}
@@ -379,15 +177,17 @@ export function GitHubContributions({
               .
             </p>
           </div>
+        ) : status === "loading" ? (
+          <div className="min-h-[160px]" role="status">
+            <p className="mb-4 text-[13px] font-medium text-foreground/75">
+              Loading GitHub activity
+            </p>
+            <div className="h-28 rounded-md bg-foreground/5" aria-hidden="true" />
+          </div>
         ) : (
-          <ContributionGrid
-            contributions={contributions}
-            label={heading}
-            loading={status === "loading"}
-            reduceMotion={reduceMotion}
-          />
+          <ActivityHeatmap key="calendar" data={heatmapData} />
         )}
-
+        </div>
       </div>
     </div>
   );
