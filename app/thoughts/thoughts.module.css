@@ -1,0 +1,60 @@
+:global(.content-haze).indexHaze::before {
+  inset-inline: -1rem;
+}
+
+:global(.content-haze).article::before {
+  inset-inline: -1rem;
+  border-radius: 2rem;
+  background: color-mix(in srgb, var(--background) 90%, transparent);
+  filter: blur(24px);
+}
+
+.header {
+  margin-bottom: 2.5rem;
+}
+
+.back {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  text-underline-offset: 0.28em;
+}
+
+.back:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+
+.title {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 580;
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.date {
+  display: block;
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.body {
+  color: color-mix(in srgb, var(--foreground) 88%, var(--background));
+  font-size: 1rem;
+  line-height: 1.85;
+  overflow-wrap: break-word;
+}
+
+.body p + p {
+  margin-top: 1.5rem;
+}
+
+.body a {
+  font-weight: 500;
+}

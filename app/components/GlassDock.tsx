@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const pageLinks = [
   { href: "/work", label: "Work" },
   { href: "/projects", label: "Projects" },
+  { href: "/thoughts", label: "Thoughts" },
 ] as const;
 
 export function GlassDock() {
