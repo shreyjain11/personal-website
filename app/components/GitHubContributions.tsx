@@ -9,6 +9,7 @@ type ActivityResponse = {
 };
 
 type LoadState = "loading" | "ready" | "error";
+const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 
 export function GitHubContributions({
   username,
@@ -29,39 +30,60 @@ export function GitHubContributions({
 
   React.useEffect(() => {
     const controller = new AbortController();
+    let inFlight = false;
+    let hasLoaded = false;
     setStatus("loading");
 
     // Retry with backoff before giving up: the upstream source occasionally
     // rate limits, and a second try a moment later usually succeeds.
     const load = async () => {
-      for (const delay of [0, 2000, 5000]) {
-        if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
-        if (controller.signal.aborted) return;
-        try {
-          const response = await fetch(
-            `/api/github-activity?username=${encodeURIComponent(username)}`,
-            {
-              signal: controller.signal,
-              // The API handles caching; don't reuse an older browser-cached calendar.
-              cache: "no-store",
-            },
-          );
-          if (!response.ok) continue;
-          const data = (await response.json()) as ActivityResponse;
+      if (inFlight || controller.signal.aborted) return;
+      inFlight = true;
+      try {
+        for (const delay of [0, 2000, 5000]) {
+          if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
           if (controller.signal.aborted) return;
-          if (!data.contributions?.length) continue;
-          setActivity(data);
-          setStatus("ready");
-          return;
-        } catch (error: unknown) {
-          if (error instanceof DOMException && error.name === "AbortError") return;
+          try {
+            const response = await fetch(
+              `/api/github-activity?username=${encodeURIComponent(username)}`,
+              {
+                signal: controller.signal,
+                // The API handles caching; don't reuse an older browser-cached calendar.
+                cache: "no-store",
+              },
+            );
+            if (!response.ok) continue;
+            const data = (await response.json()) as ActivityResponse;
+            if (controller.signal.aborted) return;
+            if (!data.contributions?.length) continue;
+            hasLoaded = true;
+            setActivity(data);
+            setStatus("ready");
+            return;
+          } catch (error: unknown) {
+            if (error instanceof DOMException && error.name === "AbortError") return;
+          }
         }
+        // Preserve a working calendar if a background refresh briefly fails.
+        if (!controller.signal.aborted && !hasLoaded) setStatus("error");
+      } finally {
+        inFlight = false;
       }
-      if (!controller.signal.aborted) setStatus("error");
     };
 
-    load();
-    return () => controller.abort();
+    const refresh = () => {
+      if (document.visibilityState === "visible") void load();
+    };
+    void load();
+    const interval = window.setInterval(refresh, REFRESH_INTERVAL_MS);
+    document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("focus", refresh);
+    return () => {
+      controller.abort();
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("focus", refresh);
+    };
   }, [username]);
 
   React.useEffect(() => {

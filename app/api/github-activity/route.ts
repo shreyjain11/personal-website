@@ -1,159 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-
-type Contribution = {
-  date: string;
-  count: number;
-  level: number;
-};
+import { fetchContributions, type GitHubActivity } from "../../lib/github-activity";
 
 const USERNAME_PATTERN = /^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$/i;
-const CONTRIBUTIONS_API = "https://github-contributions-api.jogruber.de/v4";
-const TIMEOUT_MS = 8000;
 
-// Last successful result per user, kept for the life of the server instance.
-// Served when every upstream source is failing so the graph never goes blank
-// just because a source is briefly down or rate limiting.
-const lastGood = new Map<string, Contribution[]>();
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const LEVELS: Record<string, number> = {
-  NONE: 0,
-  FIRST_QUARTILE: 1,
-  SECOND_QUARTILE: 2,
-  THIRD_QUARTILE: 3,
-  FOURTH_QUARTILE: 4,
-};
-
-// Preferred source when a GITHUB_TOKEN env var is set: GitHub's official
-// GraphQL API, authenticated with its own 5,000 requests/hour budget.
-async function fromGitHubApi(username: string): Promise<Contribution[]> {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) return [];
-
-  const response = await fetch("https://api.github.com/graphql", {
-    method: "POST",
-    headers: { Authorization: `bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: `query ($login: String!) {
-        user(login: $login) {
-          contributionsCollection {
-            contributionCalendar {
-              weeks { contributionDays { date contributionCount contributionLevel } }
-            }
-          }
-        }
-      }`,
-      variables: { login: username },
-    }),
-    next: { revalidate: 3600 },
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  });
-
-  if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);
-
-  const payload = (await response.json()) as {
-    data?: {
-      user?: {
-        contributionsCollection: {
-          contributionCalendar: {
-            weeks: {
-              contributionDays: { date: string; contributionCount: number; contributionLevel: string }[];
-            }[];
-          };
-        };
-      } | null;
-    };
-  };
-
-  const weeks = payload.data?.user?.contributionsCollection.contributionCalendar.weeks ?? [];
-  return weeks.flatMap((week) =>
-    week.contributionDays.map((day) => ({
-      date: day.date,
-      count: day.contributionCount,
-      level: LEVELS[day.contributionLevel] ?? 0,
-    })),
-  );
-}
-
-// Fallback source. It's a shared free service with a strict per-IP rate limit
-// (10 requests / 10s), and Vercel's outbound IPs are shared with many other
-// sites, so 429s happen. Retry once after the window has had time to drain.
-async function fromContributionsApi(username: string): Promise<Contribution[]> {
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    if (attempt > 0) await sleep(1500);
-
-    const response = await fetch(`${CONTRIBUTIONS_API}/${username}?y=last`, {
-      next: { revalidate: 3600 },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-
-    if (response.ok) {
-      const payload = (await response.json()) as { contributions?: Contribution[] };
-      return payload.contributions ?? [];
-    }
-
-    if (response.status !== 429 && response.status < 500) {
-      throw new Error(`Contribution service returned ${response.status}`);
-    }
-  }
-
-  throw new Error("Contribution service unavailable");
-}
-
-// Last resort: read the same data straight from GitHub's contribution calendar,
-// which renders one <td data-date data-level> per day plus a <tool-tip>
-// ("3 contributions on …" / "No contributions on …") holding the count.
-async function fromGitHub(username: string): Promise<Contribution[]> {
-  const response = await fetch(`https://github.com/users/${username}/contributions`, {
-    next: { revalidate: 3600 },
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-    headers: { Accept: "text/html" },
-  });
-
-  if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
-
-  const html = await response.text();
-  const counts = new Map<string, number>();
-  for (const [, id, text] of html.matchAll(/<tool-tip\b[^>]*\bfor="([^"]+)"[^>]*>([^<]*)<\/tool-tip>/g)) {
-    counts.set(id, Number.parseInt(text.replace(/,/g, ""), 10) || 0);
-  }
-
-  const days: Contribution[] = [];
-  for (const [tag] of html.matchAll(/<td\b[^>]*\bdata-date="[^"]+"[^>]*>/g)) {
-    const date = tag.match(/\bdata-date="(\d{4}-\d{2}-\d{2})"/)?.[1];
-    const level = Number(tag.match(/\bdata-level="(\d)"/)?.[1] ?? 0);
-    const id = tag.match(/\bid="([^"]+)"/)?.[1];
-    if (date) days.push({ date, level, count: id ? counts.get(id) ?? 0 : 0 });
-  }
-
-  return days.sort((a, b) => a.date.localeCompare(b.date));
-}
-
-function normalize(days: Contribution[]): Contribution[] {
-  const firstSunday = days.findIndex(
-    (day) => new Date(`${day.date}T00:00:00Z`).getUTCDay() === 0,
-  );
-
-  return days.slice(firstSunday < 0 ? 0 : firstSunday).map((day) => ({
-    date: day.date,
-    count: Math.max(0, day.count),
-    level: Math.min(4, Math.max(0, day.level)),
-  }));
-}
-
-async function fetchContributions(username: string) {
-  for (const source of [fromGitHubApi, fromContributionsApi, fromGitHub]) {
-    try {
-      const contributions = normalize(await source(username));
-      if (contributions.length) return contributions;
-    } catch {
-      // Fall through to the next source.
-    }
-  }
-
-  return null;
-}
+// Keep the last successful calendar for this server instance during an outage.
+const lastGood = new Map<string, GitHubActivity>();
 
 export async function GET(request: NextRequest) {
   const username = request.nextUrl.searchParams.get("username")?.trim() ?? "";
@@ -163,11 +14,11 @@ export async function GET(request: NextRequest) {
   }
 
   const key = username.toLowerCase();
-  const fresh = await fetchContributions(username);
+  const fresh = await fetchContributions(key);
   if (fresh) lastGood.set(key, fresh);
 
-  const contributions = fresh ?? lastGood.get(key);
-  if (!contributions) {
+  const activity = fresh ?? lastGood.get(key);
+  if (!activity) {
     return NextResponse.json(
       { error: "GitHub activity is temporarily unavailable" },
       { status: 502, headers: { "Cache-Control": "no-store" } },
@@ -175,14 +26,16 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json(
-    { contributions },
+    { contributions: activity.contributions },
     {
       headers: {
-        // Stale data is only a fallback; cache it briefly so a fresh copy is
-        // picked up soon after the sources recover.
+        // One short cache, with synchronous refresh on expiry. Never refill
+        // this response from a separate, stale upstream fetch cache.
         "Cache-Control": fresh
-          ? "public, s-maxage=3600, stale-while-revalidate=86400"
-          : "public, s-maxage=60",
+          ? "public, max-age=0, s-maxage=300, must-revalidate"
+          : "public, max-age=0, s-maxage=60, must-revalidate",
+        "X-GitHub-Source": activity.source,
+        "X-GitHub-Stale": fresh ? "false" : "true",
       },
     },
   );

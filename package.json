@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test:github": "node --experimental-strip-types --test tests/github-activity.test.mjs",
     "start": "next start",
     "lint": "next lint"
   },
