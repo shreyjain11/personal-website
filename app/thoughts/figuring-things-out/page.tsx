@@ -32,7 +32,7 @@ export default function FiguringThingsOut() {
         </header>
         <div className={styles.body}>
           <p>
-              {"I often get sucked into problems for hours. It's usually because there is a specific part of a problem that is confusing. Sometimes my answer disagrees with the worked solution and I can't find where my reasoning went wrong. Other times I can follow the solution but don't understand how anyone thought to try it (usually the latter). However, sometimes I am not getting anywhere with my thinking, so I need to try a new method."}
+              {"I lose hours to problems. It’s rarely the whole problem, just one step that won’t make sense. Sometimes my answer disagrees with the worked solution and I can’t find where my reasoning broke. More often, I can follow every line of the solution and still have no idea how anyone thought to try it. And sometimes I’m just going in circles, and more of the same thinking won’t save me. I need a different way in."}
           </p>
           <p>
               {"I recently finished reading "}
