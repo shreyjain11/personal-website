@@ -9,9 +9,17 @@ interface Project {
   name: string;
   url: string;
   description: string;
+  paper?: string;
 }
 
 const projects: Project[] = [
+  {
+    name: "AutoSPECTRA",
+    url: "https://spectra.yashaektefaie.com/",
+    description:
+      "Has your coding agent audit where a scientific foundation model actually generalizes.",
+    paper: "https://www.biorxiv.org/content/10.64898/2026.11.03.763979v1",
+  },
   {
     name: "Veritas",
     url: "https://veritas.jainshrey.com/",
@@ -81,6 +89,16 @@ export default function Projects() {
                   <path d="M7 17L17 7M17 7H7M17 7v10" />
                 </svg>
               </a>
+              {project.paper && (
+                <a
+                  href={project.paper}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="prose-link entry-paper"
+                >
+                  Read the paper
+                </a>
+              )}
             </li>
           ))}
         </ul>

@@ -299,6 +299,15 @@ p {
   line-height: 1.6;
 }
 
+/* Secondary link under a project row; pulled up into the row's bottom padding. */
+.entry-paper {
+  display: inline-block;
+  margin-top: -0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
 .entry-role { margin-top: 0.35rem; }
 .entry-date { font-variant-numeric: tabular-nums; }
 
