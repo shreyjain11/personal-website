@@ -162,11 +162,10 @@ p {
   padding: 0 1.25rem 3rem;
 }
 
-/* Single spelled-out line under a hairline rule. The address reads as plain
+/* Single spelled-out line. The address reads as plain
    prose ("jainshre at broadinstitute dot org") but is still a real mailto. */
 .footer-note {
   padding-top: 1.75rem;
-  border-top: 1px solid var(--line);
   color: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.6;
@@ -345,7 +344,6 @@ p {
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  border-bottom: 1px solid var(--line);
 }
 
 .site-nav__brand,
